@@ -11,11 +11,11 @@ export const Wrapper = styled.div`
 
 export const PageWrapper = styled.div`
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background-size: cover;
   background-blend-mode: soft-light;
   background-color: ${props => props.theme.colors.bg};
-
+  background-attachment: fixed;
 `
 
 export const Play = styled.button`

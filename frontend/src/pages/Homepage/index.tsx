@@ -64,7 +64,6 @@ const Homepage = () => {
             <Play onClick={play}>Play</Play>
             <PlayerProfile>
                 <Avatar src={`https://avatars.dicebear.com/api/bottts/:${username}.svg`}/>
-
                 <PlayerInfo>
                     <Param>Name</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
                     <Param>Class</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
@@ -76,7 +75,7 @@ const Homepage = () => {
                 <SecondaryButton onClick={() => selectAll(cards, setCards)} text={"Select all"} />
                 <SecondaryButton onClick={() => deselectAll(cards, setCards)} text={"Deselect all"} />
             </div>
-            <CardsList cards={cards} setCards={setCards}/>
+            {/*<CardsList cards={cards} setCards={setCards}/>*/}
         </Wrapper>
     </PageWrapper>);
 }

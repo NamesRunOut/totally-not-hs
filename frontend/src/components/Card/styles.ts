@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {motion} from "framer-motion";
 
 export const Img = styled.img`
   width: 9rem;
@@ -8,16 +9,13 @@ export const Img = styled.img`
   z-index: 1;
 `
 
-export const Index = styled.div`
+export const Index = styled(motion.div)`
   background: ${props => props.theme.colors.card_bg};
   color: ${props => props.theme.colors.font_dark};
   width: min-content;
   height: 14rem;
   
   border-radius: 1rem 1rem 0.1rem 0.1rem;
-  border: ${props =>
-    //@ts-ignore
-    props.selected ? '2px solid red' : '2px solid #282c34'};
   padding: 0;
 
   position: relative;
@@ -27,12 +25,10 @@ export const Index = styled.div`
   flex-direction: column;
 
   font-size: 1rem;
-`
-
-export const BlankCard = styled(Index)`
-  width: 113.033px;
-  height: 156px;
-  opacity: 0.1;
+  
+  :hover{
+    cursor: pointer;
+  }
 `
 
 export const Name = styled.div`

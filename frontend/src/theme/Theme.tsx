@@ -8,7 +8,7 @@ export const theme = {
         font_dark: "black",
         blu: "#61dafb",
         blu_dark: "#468CBEB2",
-        red_pane: "#986767",
+        red_pane: "#66838a",
         card_bg: "azure",
         card_atk: "indianred",
         card_hp: "lightgreen",
