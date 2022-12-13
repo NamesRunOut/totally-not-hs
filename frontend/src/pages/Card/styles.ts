@@ -67,7 +67,31 @@ export const Atk = styled.div`
 
 export const Description = styled.div`
   font-size: 1.25rem;
-  margin: auto;
-  margin-top: 1rem;
+  margin: 1rem auto;
   width: 512px;
+`
+
+export const PriceR = styled(motion.div)`
+  background: ${props => props.theme.colors.price_r};
+  padding: 0.25rem;
+  
+  :hover{
+    cursor: pointer;
+  }
+`
+
+export const PriceB = styled(motion.div)`
+  background: ${props => props.theme.colors.price_b};
+  padding: 0.25rem;
+  
+  :hover{
+    cursor: pointer;
+  }
+`
+
+export const Owned = styled.div`
+  background: ${props => props.theme.colors.price_r};
+  padding: 0.25rem;
+  color: ${props => props.theme.colors.font_dark};
+  font-size: 1.25rem;
 `

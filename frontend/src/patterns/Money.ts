@@ -27,8 +27,9 @@ export class Money{
         if (s.currency !== this.currency) {
             return this
         }
-        this.amount += s.amount
-        return this
+        // this.amount += s.amount
+        // return this
+        return new Money(this.currency, this.amount += s.amount)
     }
 
     sub(s:Money){

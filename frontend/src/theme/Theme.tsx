@@ -12,7 +12,9 @@ export const theme = {
         card_bg: "azure",
         card_atk: "indianred",
         card_hp: "lightgreen",
-        card_mana: "dodgerblue"
+        card_mana: "dodgerblue",
+        price_b: "#ad9270",
+        price_r: "#ec4d89",
     }
 };
 

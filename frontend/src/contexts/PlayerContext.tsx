@@ -12,10 +12,22 @@ const PlayerStateContext = React.createContext<{state: State; dispatch: Dispatch
 function playerReducer(state: State, action: Action) {
     switch (action.type) {
         case 'addBasicMoney': {
-            return {...state, wallet: {...state.wallet, basic: state.wallet.basic.add(BasicCurrency(100))}}
+            return {
+                ...state,
+                wallet: {
+                    ...state.wallet,
+                    basic: state.wallet.basic.add(BasicCurrency(100))
+                }
+            }
         }
         case 'addRareMoney': {
-            return {...state, wallet: {...state.wallet, rare: state.wallet.rare.add(RareCurrency(100))}}
+            return {
+                ...state,
+                wallet: {
+                    ...state.wallet,
+                    rare: state.wallet.rare.add(RareCurrency(100))
+                }
+            }
         }
         default: {
             throw new Error(`Unhandled action type: ${action.type}`)

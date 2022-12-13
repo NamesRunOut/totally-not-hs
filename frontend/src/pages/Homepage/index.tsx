@@ -9,12 +9,10 @@ import deselectAll from "./utils/deselectAll";
 import {adjectives, animals, colors, uniqueNamesGenerator} from 'unique-names-generator';
 import {Avatar, Input, PageWrapper, Param, Play, PlayerInfo, PlayerProfile, Wrapper} from "./styles";
 import {AlertNotificationCreator} from "../../patterns/factory-method";
-import Navbar from "../../components/Navbar";
+import Index from "../../components/Navbar";
 import SecondaryButton from "../../components/SecondaryButton";
 import {rand} from "./utils/rand";
 import {cardList} from "../../utils/card_list";
-//@ts-ignore
-import bg from "../../assets/bg.png";
 
 const characterName: string = uniqueNamesGenerator({
     dictionaries: [adjectives, animals],
@@ -58,26 +56,23 @@ const Homepage = () => {
         // socket.emit('play', deck, selectedTab.id, username)
     }
 
-    return (<PageWrapper style={{backgroundImage: `url(${bg})`}}>
-        <Navbar />
-        <Wrapper>
-            <Play onClick={play}>Play</Play>
-            <PlayerProfile>
-                <Avatar src={`https://avatars.dicebear.com/api/bottts/:${username}.svg`}/>
-                <PlayerInfo>
-                    <Param>Name</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
-                    <Param>Class</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
-                    <Param>Deck</Param><Param>69 cards</Param>
-                </PlayerInfo>
-            </PlayerProfile>
-            <Classes tabs={tabs} setTabs={setTabs} selectedTab={selectedTab} setSelectedTab={setSelectedTab}/>
-            <div>
-                <SecondaryButton onClick={() => selectAll(cards, setCards)} text={"Select all"} />
-                <SecondaryButton onClick={() => deselectAll(cards, setCards)} text={"Deselect all"} />
-            </div>
-            {/*<CardsList cards={cards} setCards={setCards}/>*/}
-        </Wrapper>
-    </PageWrapper>);
+    return (<Wrapper>
+        <Play onClick={play}>Play</Play>
+        <PlayerProfile>
+            <Avatar src={`https://avatars.dicebear.com/api/bottts/:${username}.svg`}/>
+            <PlayerInfo>
+                <Param>Name</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
+                <Param>Class</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
+                <Param>Deck</Param><Param>69 cards</Param>
+            </PlayerInfo>
+        </PlayerProfile>
+        <Classes tabs={tabs} setTabs={setTabs} selectedTab={selectedTab} setSelectedTab={setSelectedTab}/>
+        <div>
+            <SecondaryButton onClick={() => selectAll(cards, setCards)} text={"Select all"} />
+            <SecondaryButton onClick={() => deselectAll(cards, setCards)} text={"Deselect all"} />
+        </div>
+        {/*<CardsList cards={cards} setCards={setCards}/>*/}
+    </Wrapper>);
 }
 
 export default Homepage;

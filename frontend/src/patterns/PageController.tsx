@@ -12,6 +12,9 @@ import MissingPage from '../pages/404'
 import Theme from "../theme/Theme";
 import Cards from "../pages/Cards";
 import Card from "../pages/Card";
+//@ts-ignore
+import bg from "../assets/bg.png";
+import {PageWrapper} from "../pages/Homepage/styles";
 
 function PageController() {
   return (
@@ -22,13 +25,16 @@ function PageController() {
                       <Router>
                           <GlobalStyle/>
                           <Popup/>
-                          <Routes>
-                              <Route path="/" element={<Homepage />}/>
-                              <Route path="/game" element={<Game/>}/>
-                              <Route path="/cards" element={<Cards/>}/>
-                              <Route path="/card/:id" element={<Card/>}/>
-                              <Route element={<MissingPage/>}/>
-                          </Routes>
+                          <PageWrapper style={{backgroundImage: `url(${bg})`}}>
+                              <Navbar />
+                              <Routes>
+                                  <Route path="/" element={<Homepage />}/>
+                                  <Route path="/game" element={<Game/>}/>
+                                  <Route path="/cards" element={<Cards/>}/>
+                                  <Route path="/card/:id" element={<Card/>}/>
+                                  <Route element={<MissingPage/>}/>
+                              </Routes>
+                          </PageWrapper>
                       </Router>
                   </PlayerProvider>
               </PlayersProvider>
