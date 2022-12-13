@@ -1,4 +1,5 @@
 import {createGlobalStyle} from 'styled-components'
+import {theme} from './Theme'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -16,12 +17,15 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     max-width: 100vw;
     
-    background-color: #282c34;
-    color: white;
+    background-color: ${theme.colors.bg};
+    color: ${theme.colors.font_light};
+    width: 100%;
+    height: 100%;
   }
   
-  a {
-    //color: #61dafb;
+  #root{
+    width: 100%;
+    height: 100%;
   }
 `
 

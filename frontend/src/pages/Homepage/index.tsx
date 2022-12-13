@@ -6,13 +6,26 @@ import {useNavigate} from "react-router-dom";
 import Classes from "./components/ClassPicker";
 import selectAll from "./utils/selectAll";
 import deselectAll from "./utils/deselectAll";
-import {adjectives, animals, uniqueNamesGenerator} from 'unique-names-generator';
-import {Button, Input, Play, Wrapper} from "./styles";
+import {adjectives, animals, colors, uniqueNamesGenerator} from 'unique-names-generator';
+import {Avatar, Input, PageWrapper, Param, Play, PlayerInfo, PlayerProfile, Wrapper} from "./styles";
 import {AlertNotificationCreator} from "../../patterns/factory-method";
+import Navbar from "../../components/Navbar";
+import SecondaryButton from "../../components/SecondaryButton";
+import {rand} from "./utils/rand";
+import {cardList} from "../../utils/card_list";
+//@ts-ignore
+import bg from "../../assets/bg.png";
 
 const characterName: string = uniqueNamesGenerator({
-    dictionaries: [adjectives, animals]
+    dictionaries: [adjectives, animals],
+    seed: rand(0, 100)
 });
+
+// const cardName: string = uniqueNamesGenerator({
+//     dictionaries: [colors, adjectives, animals],
+//     separator: ' ',
+//     seed: rand(0, 100)
+// });
 
 const Homepage = () => {
     const [cards, setCards] = useState<any>([])
@@ -45,18 +58,27 @@ const Homepage = () => {
         // socket.emit('play', deck, selectedTab.id, username)
     }
 
-    return (
+    return (<PageWrapper style={{backgroundImage: `url(${bg})`}}>
+        <Navbar />
         <Wrapper>
             <Play onClick={play}>Play</Play>
-            <Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
+            <PlayerProfile>
+                <Avatar src={`https://avatars.dicebear.com/api/bottts/:${username}.svg`}/>
+
+                <PlayerInfo>
+                    <Param>Name</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
+                    <Param>Class</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
+                    <Param>Deck</Param><Param>69 cards</Param>
+                </PlayerInfo>
+            </PlayerProfile>
             <Classes tabs={tabs} setTabs={setTabs} selectedTab={selectedTab} setSelectedTab={setSelectedTab}/>
             <div>
-                <Button onClick={() => selectAll(cards, setCards)}>Select all</Button>
-                <Button onClick={() => deselectAll(cards, setCards)}>Deselect all</Button>
+                <SecondaryButton onClick={() => selectAll(cards, setCards)} text={"Select all"} />
+                <SecondaryButton onClick={() => deselectAll(cards, setCards)} text={"Deselect all"} />
             </div>
             <CardsList cards={cards} setCards={setCards}/>
         </Wrapper>
-    );
+    </PageWrapper>);
 }
 
 export default Homepage;

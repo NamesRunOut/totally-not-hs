@@ -2,9 +2,7 @@ import {usePlayer} from "../contexts/PlayerContext";
 import {BasicCurrency, RareCurrency} from "../patterns/Money";
 import {useEffect, useState} from "react";
 
-
-
-const PlayerSummary = () => {
+const Navbar = () => {
     const {state, dispatch} = usePlayer()
     const [basicCurrency, setBasicCurrency] = useState(BasicCurrency())
     const [rareCurrency, setRareCurrency] = useState(RareCurrency())
@@ -26,4 +24,4 @@ const PlayerSummary = () => {
     </>)
 }
 
-export default PlayerSummary
+export default Navbar

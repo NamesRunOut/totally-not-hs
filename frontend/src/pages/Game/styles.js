@@ -69,9 +69,8 @@ export const Info = styled.div`
 `
 
 export const Avatar = styled.img`
-  width: 100%;
-  height: 30%;
-  background: #282c34;
+  width: 6.9rem;
+  height: 6.9rem;
 `
 
 export const Desc = styled.div`
