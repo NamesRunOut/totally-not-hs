@@ -1,12 +1,15 @@
 class Player(object):
-    def __init__(self, id, points):
+    def __init__(self, id, name, health, email):
         self.id = id
-        self.points = points
+        self.name = name
+        self.health = health
+        self.email = email
 
     def GetCards():
         pass
 
-    def SefName(self, name):
+    def ChangeName(self, name):
         self.name = name
 
-    #other functions
+    def changeHealth(self, value):
+        self.health += value
