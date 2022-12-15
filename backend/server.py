@@ -25,6 +25,8 @@ async def print_message(sid, message):
     print(message)
 @sio.on("getCardPicture")
 async def get_card_picture(name):
+    #TODO:"https://www.youtube.com/watch?v=Kg-sxVmCt5Q"
+    pass
     
 
 ## We bind our aiohttp endpoint to our app
