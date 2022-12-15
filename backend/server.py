@@ -23,11 +23,17 @@ async def print_message(sid, message):
     ## we print the socket ID and the message
     print("Socket ID: " , sid)
     print(message)
+    
 @sio.on("getCardPicture")
 async def get_card_picture(name):
     #TODO:"https://www.youtube.com/watch?v=Kg-sxVmCt5Q"
     pass
-    
+
+## pattern to receive id of data and send 
+@sio.event("sendAnyData")
+def my_message(dataid):
+    print('message received with ', dataid)
+    sio.emit('my response', {'response': 'my response'})
 
 ## We bind our aiohttp endpoint to our app
 ## router
