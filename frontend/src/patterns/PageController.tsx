@@ -15,29 +15,32 @@ import Card from "../pages/Card";
 //@ts-ignore
 import bg from "../assets/bg.png";
 import {PageWrapper} from "../pages/Homepage/styles";
+import {CardRegistry} from "./CardRegistry";
 
 function PageController() {
   return (
       <Theme>
           <Notification>
-              <PlayersProvider>
-                  <PlayerProvider>
-                      <Router>
-                          <GlobalStyle/>
-                          <Popup/>
-                          <PageWrapper style={{backgroundImage: `url(${bg})`}}>
-                              <Navbar />
-                              <Routes>
-                                  <Route path="/" element={<Homepage />}/>
-                                  <Route path="/game" element={<Game/>}/>
-                                  <Route path="/cards" element={<Cards/>}/>
-                                  <Route path="/card/:id" element={<Card/>}/>
-                                  <Route element={<MissingPage/>}/>
-                              </Routes>
-                          </PageWrapper>
-                      </Router>
-                  </PlayerProvider>
-              </PlayersProvider>
+              <CardRegistry>
+                  <PlayersProvider>
+                      <PlayerProvider>
+                          <Router>
+                              <GlobalStyle/>
+                              <Popup/>
+                              <PageWrapper style={{backgroundImage: `url(${bg})`}}>
+                                  <Navbar />
+                                  <Routes>
+                                      <Route path="/" element={<Homepage />}/>
+                                      <Route path="/game" element={<Game/>}/>
+                                      <Route path="/cards" element={<Cards/>}/>
+                                      <Route path="/card/:id" element={<Card/>}/>
+                                      <Route element={<MissingPage/>}/>
+                                  </Routes>
+                              </PageWrapper>
+                          </Router>
+                      </PlayerProvider>
+                  </PlayersProvider>
+              </CardRegistry>
           </Notification>
       </Theme>
   );
