@@ -15,12 +15,12 @@ const CardRegistry = (props: { children: boolean | React.ReactChild | React.Reac
         if (!registry.some(el => el.id === card.id)) setRegistry([...registry, card])
     }
 
-    const setCard = (id: number) => {
+    const getCard = (id: number) => {
         return registry.find(el => el.id === id)
     }
 
     return (
-        <CardRegistryContext.Provider value={[addCard, setCard]}>
+        <CardRegistryContext.Provider value={[addCard, getCard]}>
             {props.children}
         </CardRegistryContext.Provider>
     )

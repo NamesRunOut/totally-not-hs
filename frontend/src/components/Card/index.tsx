@@ -19,7 +19,6 @@ const Cards: React.FC<{ card: any}> = ({card}) => {
             <Img src={cardList[card.id].image} alt={card.id} loading="lazy" />
             <Name>{card.name.split(" ").map((word: string) => <Word key={word}>{word}</Word>)}</Name>
             <Description>{card.description || "This is an example description that doesnt do a thing"}</Description>
-            {/*<Price>{card.price.b}</Price>*/}
             <Mana>{card.mana || 0}</Mana>
             <Atk>{card.atk || 0}</Atk>
             <Hp>{card.hp || 0}</Hp>
