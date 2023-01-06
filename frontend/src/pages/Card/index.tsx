@@ -25,10 +25,10 @@ const Cards = () => {
             {card.owned ? <Owned>Owned</Owned> :
             <>
                 <Stats>
-                    <PriceB>Buy using B: 420</PriceB>
+                    <PriceB>Buy using B: 4200</PriceB>
                 </Stats>
                 <Stats>
-                    <PriceR>Buy using R: 69</PriceR>
+                    <PriceR>Buy using R: 60</PriceR>
                 </Stats>
             </>}
 
