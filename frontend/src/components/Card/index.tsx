@@ -1,29 +1,26 @@
 import React from 'react';
-import {Atk, Description, Hp, Img, Index, Mana, Name, Word } from './styles';
+import {Atk, Description, Hp, Img, Index, Mana, Name, NotOwnedOverlay, Word } from './styles';
 import {useNavigate} from "react-router-dom";
 import {cardList} from "../../utils/card_list";
+import BaseCard from "../../patterns/special case/BaseCard";
 
-const Cards: React.FC<{ card: any}> = ({card}) => {
-    const navigate = useNavigate()
-
-    const onClick = () => {
-        navigate(`/card/${card.id}`)
-    }
-
+const Card: React.FC<{card: BaseCard, owned?: boolean, onClick?: any, selected?: boolean}> = ({card, owned, onClick, selected}) => {
     return (
         <Index
-            onClick={onClick}
+            style={{border: selected ? "2px solid red" : "none"}}
+            onClick={onClick !== undefined ? onClick : () => {}}
             whileHover={{ scale: 1.3, rotate: 19, zIndex: 5 }}
             whileTap={{ scale: 1.3, rotate: -19, zIndex: 5 }}>
+            {owned !== undefined && !owned && <NotOwnedOverlay />}
             {/* Tutaj jest lazy loading */}
-            <Img src={cardList[card.id].image} alt={card.id} loading="lazy" />
+            <Img src={card.image} alt={card.id.toString()} loading="lazy" />
             <Name>{card.name.split(" ").map((word: string) => <Word key={word}>{word}</Word>)}</Name>
-            <Description>{card.description || "This is an example description that doesnt do a thing"}</Description>
-            <Mana>{card.mana || 0}</Mana>
-            <Atk>{card.atk || 0}</Atk>
-            <Hp>{card.hp || 0}</Hp>
+            <Description>{card.description}</Description>
+            <Mana>{card.mana}</Mana>
+            <Atk>{card.atk}</Atk>
+            <Hp>{card.hp}</Hp>
         </Index>
     );
 }
 
-export default Cards;
+export default Card;

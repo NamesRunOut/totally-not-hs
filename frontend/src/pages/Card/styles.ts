@@ -93,5 +93,5 @@ export const Owned = styled.div`
   background: ${props => props.theme.colors.price_r};
   padding: 0.25rem;
   color: ${props => props.theme.colors.font_dark};
-  font-size: 1.25rem;
+  font-size: 1.75rem;
 `

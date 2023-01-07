@@ -18,8 +18,7 @@ export const theme = {
     }
 };
 
-// @ts-ignore
-const Theme = ({ children }) => (
+const Theme:React.FC <{children: any}> = ({ children }) => (
     <ThemeProvider theme={theme}>{children}</ThemeProvider>
 );
 

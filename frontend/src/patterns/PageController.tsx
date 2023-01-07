@@ -16,6 +16,7 @@ import Card from "../pages/Card";
 import bg from "../assets/bg.png";
 import {PageWrapper} from "../pages/Homepage/styles";
 import {CardRegistry} from "./CardRegistry";
+import Deck from "../pages/Deck";
 
 function PageController() {
   return (
@@ -34,6 +35,7 @@ function PageController() {
                                       <Route path="/game" element={<Game/>}/>
                                       <Route path="/cards" element={<Cards/>}/>
                                       <Route path="/card/:id" element={<Card/>}/>
+                                      <Route path="/deck" element={<Deck/>}/>
                                       <Route element={<MissingPage/>}/>
                                   </Routes>
                               </PageWrapper>

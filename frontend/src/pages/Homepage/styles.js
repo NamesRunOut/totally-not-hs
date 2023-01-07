@@ -7,6 +7,9 @@ export const Wrapper = styled.div`
   flex-direction: column;
   
   padding: 1rem;
+
+  perspective: 500px;
+  position: relative;
 `
 
 export const PageWrapper = styled.div`
@@ -21,9 +24,9 @@ export const PageWrapper = styled.div`
 export const Play = styled.button`
   margin: 0.5rem;
   background-color: ${props => props.theme.colors.blu};
-  border: 0 solid  ${props => props.theme.colors.font_light};
+  border: 0 solid ${props => props.theme.colors.font_light};
   box-sizing: border-box;
-  color:  ${props => props.theme.colors.font_dark};
+  color: ${props => props.theme.colors.font_dark};
   display: flex;
   font-size: 1.5rem;
   font-weight: 700;
@@ -31,7 +34,7 @@ export const Play = styled.button`
   padding: 0.75rem 1rem;
   position: relative;
   text-align: center;
-  text-decoration: none  ${props => props.theme.colors.font_dark} solid;
+  text-decoration: none ${props => props.theme.colors.font_dark} solid;
   text-decoration-thickness: auto;
   width: 6rem;
   cursor: pointer;
@@ -39,11 +42,11 @@ export const Play = styled.button`
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  
-  :hover{
-    background-color:  ${props => props.theme.colors.blu_dark};
+
+  :hover {
+    background-color: ${props => props.theme.colors.blu_dark};
   }
-  
+
   :after {
     content: '';
     position: absolute;
@@ -52,6 +55,92 @@ export const Play = styled.button`
     left: 6px;
     width: calc(100% - 1px);
     height: calc(100% - 1px);
+  }
+`
+
+export const PlayGlitch = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  
+  transform: rotate(-2deg);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  
+  :after {
+    --slice-0: inset(50% 50% 50% 50%);
+    --slice-1: inset(80% -6px 0 0);
+    --slice-2: inset(50% -6px 30% 0);
+    --slice-3: inset(10% -6px 85% 0);
+    --slice-4: inset(40% -6px 43% 0);
+    --slice-5: inset(80% -6px 5% 0);
+
+    content: 'Play';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 3%, #00E6F6 3%, #29a92b 5%, #0178ff 5%);
+    text-shadow: -3px -3px 0px #e32384, 3px 3px 0px #00E6F6;
+    clip-path: var(--slice-0);
+  }
+
+  :hover::after {
+    animation: 1s glitch;
+    animation-timing-function: steps(2, end);
+  }
+
+  @keyframes glitch {
+    0% {
+      clip-path: var(--slice-1);
+      transform: translate(-20px, -10px);
+    }
+    10% {
+      clip-path: var(--slice-3);
+      transform: translate(10px, 10px);
+    }
+    20% {
+      clip-path: var(--slice-1);
+      transform: translate(-10px, 10px);
+    }
+    30% {
+      clip-path: var(--slice-3);
+      transform: translate(0px, 5px);
+    }
+    40% {
+      clip-path: var(--slice-2);
+      transform: translate(-5px, 0px);
+    }
+    50% {
+      clip-path: var(--slice-3);
+      transform: translate(5px, 0px);
+    }
+    60% {
+      clip-path: var(--slice-4);
+      transform: translate(5px, 10px);
+    }
+    70% {
+      clip-path: var(--slice-2);
+      transform: translate(-10px, 10px);
+    }
+    80% {
+      clip-path: var(--slice-5);
+      transform: translate(20px, -10px);
+    }
+    90% {
+      clip-path: var(--slice-1);
+      transform: translate(-10px, 0px);
+    }
+    100% {
+      clip-path: var(--slice-1);
+      transform: translate(0);
+    }
   }
 `
 
@@ -64,8 +153,8 @@ export const Input = styled.input`
 `
 
 export const Avatar = styled.img`
-  width: 6.9rem;
-  height: 100%;
+  width: 7.9rem;
+  height: max-content;
   background: ${props => props.theme.colors.bg};
   border-radius: 2px;
   padding: 0.5rem;
@@ -106,6 +195,7 @@ export const PlayerInfo = styled.div`
   display: grid;
   grid-template-columns: max-content 1fr;
   grid-gap: 0.25rem;
+  grid-column-gap: 0.5rem;
   height: 100%;
 `
 

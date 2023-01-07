@@ -1,32 +1,17 @@
 import styled from "styled-components";
 
-export const ButtonOutline = styled.div`
-  border: 1px solid ${props => props.theme.colors.font_dark};
-  position: absolute;
-  z-index: 2;
-  top: -0.75rem;
-  left: 0.5rem;
-  width: 6rem;
-  height: 2.5rem;
-  background-color: transparent;
-`
-
 export const ButtonBg = styled.button`
-  background: ${props => props.theme.colors.blu};
-  margin: 0 1rem;
-  padding: 0.5rem 1rem;
-  width: max-content;
-  height: 2rem;
-  border: none;
-  cursor: pointer;
+  margin: 0.25rem;
+  background: transparent;
+  border: 1px solid ${props => props.theme.colors.font_light};
+  color: ${props => props.theme.colors.font_light};
+  display: flex;
+  font-size: 1rem;
+  font-weight: 700;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
   position: relative;
-  z-index: 1;
-  border-radius: 0.1rem;
-  transform: rotate(-2deg);
-
-  :hover {
-    background: ${props => props.theme.colors.blu_dark};
-  }
+  cursor: pointer;
 
   :after {
     --slice-0: inset(50% 50% 50% 50%);
@@ -103,10 +88,7 @@ export const ButtonBg = styled.button`
 
 export const ButtonName = styled.div`
   position: relative;
-  width: max-content;
-  font-size: 1rem;
-  top: 0;
-  left: 0;
-  color: ${props => props.theme.colors.font_dark};
-  z-index: 2;
+  font-family: -apple-system, BlinkMacSystemFont, 'bahnschrift', 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
 `

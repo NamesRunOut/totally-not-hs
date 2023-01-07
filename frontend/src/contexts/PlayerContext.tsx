@@ -9,7 +9,7 @@ type PlayerProviderProps = {children: React.ReactNode}
 
 const PlayerStateContext = React.createContext<{state: State; dispatch: Dispatch} | undefined>(undefined)
 
-function playerReducer(state: State, action: Action) {
+const playerReducer = (state: State, action: Action) => {
     switch (action.type) {
         case 'addBasicMoney': {
             return {
@@ -29,6 +29,54 @@ function playerReducer(state: State, action: Action) {
                 }
             }
         }
+        case 'addCard': {
+            if (action.currency === "R") {
+                return {
+                    ...state,
+                    wallet: {
+                        ...state.wallet,
+                        rare: state.wallet.rare.sub(RareCurrency(action.price))
+                    },
+                    ownedCards: state.ownedCards.add(action.id)
+                }
+            }
+
+            return {
+                ...state,
+                wallet: {
+                    ...state.wallet,
+                    basic: state.wallet.basic.sub(BasicCurrency(action.price))
+                },
+                ownedCards: state.ownedCards.add(action.id)
+            }
+        }
+        case 'select': {
+            if (state.deck.has(action.id)) {
+                let tmp = structuredClone(state.deck)
+                tmp.delete(action.id)
+
+                return {
+                    ...state,
+                    deck: tmp
+                }
+            }
+            return {
+                ...state,
+                deck: state.deck.add(action.id)
+            }
+        }
+        case 'deselectAll': {
+            return {
+                ...state,
+                deck: new Set([])
+            }
+        }
+        case 'selectAll': {
+            return {
+                ...state,
+                deck: new Set(Array.from(state.ownedCards))
+            }
+        }
         default: {
             throw new Error(`Unhandled action type: ${action.type}`)
         }
@@ -36,7 +84,12 @@ function playerReducer(state: State, action: Action) {
 }
 
 function PlayerProvider({children}: PlayerProviderProps) {
-    let initArgs = {count: 0, wallet: {basic: BasicCurrency(), rare: RareCurrency()}}
+    let initArgs = {
+        count: 0,
+        wallet: {basic: BasicCurrency(), rare: RareCurrency()},
+        ownedCards: new Set([1,2,3,4,5,6,7,8,9,10,11,12,13,15,17,21]),
+        deck: new Set([])
+    }
     const [state, dispatch] = useReducer(playerReducer, initArgs)
     const value = {state, dispatch}
     return (

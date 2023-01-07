@@ -1,37 +1,40 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Atk, BaseInfo, Description, Hp, Img, Index, Mana, Name, Owned, PriceB, PriceR, Stats, Word} from './styles';
-import {useNavigate, useParams} from "react-router-dom";
-import {cardList} from "../../utils/card_list";
+import {useParams} from "react-router-dom";
+import {usePlayer} from "../../contexts/PlayerContext";
+import {CardRegistryContext} from "../../patterns/CardRegistry";
+import {NotificationContext} from "../../contexts/Notification";
 
 const Cards = () => {
     const {id} = useParams()
-
-    const card: any = cardList[id ? parseInt(id) : 0]
+    const {state, dispatch} = usePlayer()
+    const [, getCard] = useContext(CardRegistryContext)
+    const card = getCard(id ? parseInt(id) : -1)
+    const [setNotification] = useContext(NotificationContext)
 
     return (<Index>
         <Img src={card.image} />
         <BaseInfo>
             <Name>{card.name.split(" ").map((word: string) => <Word key={word}>{word}</Word>)}</Name>
             <Stats>
-                <Mana>Mana cost {card.mana || 0}</Mana>
-                <Atk>Attack power {card.atk || 0}</Atk>
-                <Hp>Health points {card.hp || 0}</Hp>
+                <Mana>Mana cost {card.mana}</Mana>
+                <Atk>Attack power {card.atk}</Atk>
+                <Hp>Health points {card.hp}</Hp>
             </Stats>
         </BaseInfo>
 
         <Description>{card.description || "This is an example description that doesnt do a thing"}</Description>
 
         <BaseInfo>
-            {card.owned ? <Owned>Owned</Owned> :
+            {state.ownedCards.has(card.id) ? <Owned>Owned</Owned> :
             <>
                 <Stats>
-                    <PriceB>Buy using B: 4200</PriceB>
+                    <PriceB onClick={() => card.buyIt(dispatch, card.id, "B", setNotification, state.wallet.basic.amount)}>Buy using B: {card.basicPrice || 0}</PriceB>
                 </Stats>
                 <Stats>
-                    <PriceR>Buy using R: 60</PriceR>
+                    <PriceR onClick={() => card.buyIt(dispatch, card.id, "R", setNotification, state.wallet.rare.amount)}>Buy using R: {card.rarePrice || 0}</PriceR>
                 </Stats>
             </>}
-
         </BaseInfo>
     </Index>);
 }

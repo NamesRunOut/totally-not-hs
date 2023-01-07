@@ -54,251 +54,551 @@ export const cardList = [
     {
         "id": 0,
         "name": "red beautiful mackerel",
-        "image": i0
+        "image": i0,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 1,
         "name": "fuchsia oceanic bass",
-        "image": i1
+        "image": i1,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 2,
         "name": "moccasin limited chicken",
-        "image": i2
+        "image": i2,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 3,
         "name": "emerald tropical horse",
-        "image": i3
+        "image": i3,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 4,
         "name": "fuchsia comparative tiger",
-        "image": i4
+        "image": i4,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 5,
         "name": "bronze imaginative fennec",
-        "image": i5
+        "image": i5,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 6,
         "name": "rose wasteful weasel",
-        "image": i6
+        "image": i6,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 7,
         "name": "maroon zealous llama",
-        "image": i7
+        "image": i7,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 8,
         "name": "red combative bee",
-        "image": i8
+        "image": i8,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 9,
         "name": "lavender protestant hare",
-        "image": i9
+        "image": i9,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 10,
         "name": "amaranth handicapped cephalopod",
-        "image": i10
+        "image": i10,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 11,
         "name": "white redundant reindeer",
-        "image": i11
+        "image": i11,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 12,
         "name": "plum smol ant",
-        "image": i12
+        "image": i12,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 13,
         "name": "ivory coherent shark",
-        "image": i13
+        "image": i13,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 14,
         "name": "blush tiny dolphin",
-        "image": i14
+        "image": i14,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 15,
         "name": "aquamarine global alpaca",
-        "image": i15
+        "image": i15,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 16,
         "name": "blush tiny ferret",
-        "image": i16
+        "image": i16,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 17,
         "name": "brown energetic rooster",
-        "image": i17
+        "image": i17,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 18,
         "name": "apricot symbolic snail",
-        "image": i18
+        "image": i18,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 19,
         "name": "fuchsia top swordfish",
-        "image": i19
+        "image": i19,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 20,
         "name": "jade giant kingfisher",
-        "image": i20
+        "image": i20,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 21,
         "name": "salmon yappiest mackerel",
-        "image": i21
+        "image": i21,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 22,
         "name": "indigo tight fox",
-        "image": i22
+        "image": i22,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 23,
         "name": "moccasin shiny hamster",
-        "image": i23
+        "image": i23,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 24,
         "name": "uwu tiny kitten",
-        "image": i24
+        "image": i24,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 25,
         "name": "apricot intellectual wildebeest",
-        "image": i25
+        "image": i25,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 26,
         "name": "ivory growing xerinae",
-        "image": i26
+        "image": i26,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 27,
         "name": "chocolate giant mule",
-        "image": i27
+        "image": i27,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 28,
         "name": "chocolate spiritual swan",
-        "image": i28
+        "image": i28,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 29,
         "name": "green soft felidae",
-        "image": i29
+        "image": i29,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 30,
         "name": "yellow visible cicada",
-        "image": i30
+        "image": i30,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 31,
         "name": "purple harsh lungfish",
-        "image": i31
+        "image": i31,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 32,
         "name": "ivory coherent parrot",
-        "image": i32
+        "image": i32,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 33,
         "name": "gray ruling parrot",
-        "image": i33
+        "image": i33,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 34,
         "name": "bronze imaginative possum",
-        "image": i34
+        "image": i34,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 35,
         "name": "red spiritual peafowl",
-        "image": i35
+        "image": i35,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 36,
         "name": "peach internal salamander",
-        "image": i36
+        "image": i36,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 37,
         "name": "green clear angelfish",
-        "image": i37
+        "image": i37,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 38,
         "name": "pink awkward coyote",
-        "image": i38
+        "image": i38,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 39,
         "name": "brown energetic doggo",
-        "image": i39
+        "image": i39,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 40,
         "name": "vanilla enormous donkey",
-        "image": i40
+        "image": i40,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 41,
         "name": "apricot parental antelope",
-        "image": i41
+        "image": i41,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 42,
         "name": "blush junior toucan",
-        "image": i42
+        "image": i42,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 43,
         "name": "gray ruling parrot",
-        "image": i43
+        "image": i43,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 44,
         "name": "pink domestic giraffe",
-        "image": i44
+        "image": i44,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 45,
         "name": "crimson prior gazelle",
-        "image": i45
+        "image": i45,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 46,
         "name": "apricot intellectual wildebeest",
-        "image": i46
+        "image": i46,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 47,
         "name": "amethyst living crab",
-        "image": i47
+        "image": i47,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 48,
         "name": "emerald tropical possum",
-        "image": i48
+        "image": i48,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     },
     {
         "id": 49,
         "name": "maroon causal mink",
-        "image": i49
+        "image": i49,
+        basicPrice: 420,
+        rarePrice: 100,
+        description: "This is an example description that doesnt do a thing",
+        mana: 0,
+        atk: 0,
+        hp: 0
     }
 ]

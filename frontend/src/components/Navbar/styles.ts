@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
   background: transparent;
 
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
   padding: 0.25rem 0.5rem 0;
@@ -20,4 +20,9 @@ export const TestButton = styled.button`
   :hover{
     cursor: pointer;
   }
+`
+
+export const Inline = styled.div`
+  display: inline-flex;
+  gap: 0.25rem;
 `

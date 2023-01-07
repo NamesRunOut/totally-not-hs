@@ -31,6 +31,14 @@ export const Index = styled(motion.div)`
   }
 `
 
+export const NotOwnedOverlay = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 4;
+`
+
 export const Name = styled.div`
   font-size: 1.1rem;
   width: 6rem;
