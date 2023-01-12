@@ -54,7 +54,11 @@ def join(sid, data):
     else:
         sio.emit('message', "one player ready")
 
+    #czy ten kod jest osiągalny ?
     return "you're ready"
+    #luźna propozycja return true / false
+
+
 
 
 
