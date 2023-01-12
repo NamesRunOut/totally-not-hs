@@ -24,6 +24,43 @@ def connect(sid, environ):
 
     sio.emit('client_count',client_count)
 
+
+#######################################Logika gry endpoints
+rundy = 0
+gamers = []
+last_id = 20
+
+##co z id bo to int
+@sio.event
+def join(sid, data):
+    print(data)
+    name = data['name']
+    p = PlayerDataMapper.getPlayerByName(name)
+    if p is None:
+        global last_id
+        id = last_id
+        last_id+=1
+        health = 20
+        email = data['email']
+        points = 0
+        PlayerDataMapper.addPlayer(name, health, email, points)
+        p = PlayerDataMapper.getPlayerByName(name)
+    
+    print("player {} joined".format(p.name))
+    global gamers
+    gamers.append({"id": p.id, "sid": sid})
+    if len(gamers) == 2:
+        sio.emit('message', "both gamers ready, we're starting")
+    else:
+        sio.emit('message', "one player ready")
+
+    return "you're ready"
+
+
+
+
+
+
 #add player###############################################
 @sio.event
 def addCommonPlayer(sid,data):
