@@ -1,4 +1,5 @@
 import PlayerDataMapper
+import CardDataMapper
 import numpy as np
 import pandas as pd
 #Repository
@@ -52,11 +53,30 @@ def beginOfRound(sid, playerName, gameId):
     #TODO: wysłać karty gracza
     return True
 
-def putCardInSlot(sid, cardName, slotNumber):
+def putCardInSlot(sid, cardName, slotNumber, gameId):
+    player = players[players['sid'] == sid].value[1]
     #chceck czy gracz ma taką kartę czy nie oszukuje
+    cardId = CardDataMapper.__getCardIdByName__(cardName) 
+    if(CardDataMapper.__checkIfRowInDb(player['id'], cardId)):
+        return False
     #check czy ma wystarczającą mane
+    if(player['mana'] < 1):
+        return False
     #wrzuca karte na slot, zwraca sloty gracza w formie {'slot1': [nazwKart], 'slot2':...}
-    pass
+    player['mana'] -= 1
+    new_card = [gameId, player['id'], slotNumber, cardId]
+    gameSlots.loc[len(gameSlots)] = new_card
+    res = {}
+    for i in range(4):
+        slot = gameSlots[gameSlots['slot'] == i and gameSlots['PlayerID'] == player['id'] and gameSlots['gameId'] == gameId]
+        slotName = "slot" + str(i)
+        cardIds = slot['cardId'].tolist()
+        arr = [CardDataMapper.__getCardNameById__(x) for x in cardIds]
+        res[slotName] = arr
+    
+    return res
+
+
 
 def endOfRound(sid, playerName, gameId):
     pass

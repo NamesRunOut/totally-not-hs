@@ -51,7 +51,7 @@ def endOfRound(sid, data):
 #wrzuca kartę o zadanej nazwie i zwraca sloty usera z wypełnione odpowiednio, zmniejsza mane gracza, uwaga jak ma za mało many to operacja nie powinna się powieść, zwróćmy wtedy false
 @sio.event
 def putCardInSlot(sid, data):
-    return GameLogic.putCardInSlot(sid,data['cardName'],data['slotNumber'])
+    return GameLogic.putCardInSlot(sid,data['cardName'],data['slotNumber'], data['gameId'])
 
 
 
