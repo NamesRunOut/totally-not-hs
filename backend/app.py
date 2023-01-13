@@ -1,6 +1,7 @@
 import socketio
 import PlayerDataMapper
 import CardDataMapper
+import GameLogic
 sio = socketio.Server() 
 app = socketio.WSGIApp(sio,static_files={
     '/': './public/'
@@ -13,6 +14,7 @@ def connect(sid, environ):
     print(sid,'connected')
     global client_count
     client_count+=1
+    GameLogic.join('michal', 'sraczkowaty',sid)
     #CardDataMapper.DeleteCard('card6')
     #CardDataMapper.AssignCardFor('kitku','card4')
     #CardDataMapper.CreateCard('new card','from python sever','si',22,33)
@@ -26,43 +28,30 @@ def connect(sid, environ):
 
 
 #######################################Logika gry endpoints
-rundy = 0
-gamers = []
-last_id = 20
-
-##co z id bo to int
+# gamers = []
+# last_id = 20
 @sio.event
 def join(sid, data):
-    print(data)
-    name = data['name']
-    p = PlayerDataMapper.getPlayerByName(name)
-    if p is None:
-        global last_id
-        id = last_id
-        last_id+=1
-        health = 20
-        email = data['email']
-        points = 0
-        PlayerDataMapper.addPlayer(name, health, email, points)
-        p = PlayerDataMapper.getPlayerByName(name)
-    
-    print("player {} joined".format(p.name))
-    global gamers
-    gamers.append({"id": p.id, "sid": sid})
-    if len(gamers) == 2:
-        sio.emit('message', "both gamers ready, we're starting")
-    else:
-        sio.emit('message', "one player ready")
+    return GameLogic.join(data['name'], data['email'],sid)
 
-    #czy ten kod jest osiągalny ?
-    return "you're ready"
-    #luźna propozycja return true / false
+#pobiera karty graczy dla zadanego id gry i zwraca na front
+#dodaje manę
+#inkrementuje runde
+#opróżnia sloty
+@sio.event
+def beginRound(sid,data):
+    return GameLogic.beginOfRound(sid,data['name'],data['gameId'])
 
+#karty się biją itd...
+#wynikiem ma być albo koniec gry tzn propka {'isFinished': True, 'isWinner' = True} do wygranego sida, natomiast do przegranego co innego...
+@sio.event
+def endOfRound(sid, data):
+    return GameLogic.endOfRound(sid,data['name'],data['gameId'])
 
-
-
-
-
+#wrzuca kartę o zadanej nazwie i zwraca sloty usera z wypełnione odpowiednio, zmniejsza mane gracza, uwaga jak ma za mało many to operacja nie powinna się powieść, zwróćmy wtedy false
+@sio.event
+def putCardInSlot(sid, data):
+    return GameLogic.putCardInSlot(sid,data['cardName'],data['slotNumber'])
 
 
 
