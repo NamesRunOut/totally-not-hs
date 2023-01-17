@@ -2,6 +2,7 @@ import PlayerDataMapper
 import CardDataMapper
 import numpy as np
 import pandas as pd
+import random
 #Repository
 players = pd.DataFrame(columns = ['gameId', 'id', 'sid','points','mana','round'])
 gameSlots = pd.DataFrame(columns = ['gameId', 'PlayerID','slot','CardId'])
@@ -39,6 +40,8 @@ def join(playerName, playerEmail,sid):
         print(players)
         HighestGameID+=1
         return {'canPlay': True, 'gameID': HighestGameID-1}
+
+    
     
 
 
@@ -50,7 +53,7 @@ def beginOfRound(sid, playerName, gameId):
     if(row['round']%3==0):
         row['mana']=100
     gameSlots = gameSlots.drop(gameSlots[gameSlots.playerId == playerId & gameSlots.gameId == gameId])
-    #TODO: wysłać karty gracza
+    #TODO: wysłać karty gracza + puste sloty
     return True
 
 def putCardInSlot(sid, cardName, slotNumber, gameId):
@@ -67,7 +70,7 @@ def putCardInSlot(sid, cardName, slotNumber, gameId):
     new_card = [gameId, player['id'], slotNumber, cardId]
     gameSlots.loc[len(gameSlots)] = new_card
     res = {}
-    for i in range(4):
+    for i in range(1, 5):
         slot = gameSlots[gameSlots['slot'] == i and gameSlots['PlayerID'] == player['id'] and gameSlots['gameId'] == gameId]
         slotName = "slot" + str(i)
         cardIds = slot['cardId'].tolist()
@@ -79,4 +82,51 @@ def putCardInSlot(sid, cardName, slotNumber, gameId):
 
 
 def endOfRound(sid, playerName, gameId):
-    pass
+    #ściąga informacje o graczu
+    player = players[players['sid'] == sid].value[1]
+    #ściąga informacje o przeciwniku gracza
+    opponent = players[players['gameId'] == gameId and players['sid'] != sid].value[1]
+    #ściąga informacje o kartach w slotach obu graczy
+    playerSlots = gameSlots[gameSlots['gameId'] == gameId and gameSlots['playerID'] == player['id']]
+    opponentSlots = gameSlots[gameSlots['gameId'] == gameId and gameSlots['playerID'] == opponent['id']]
+    
+    opponentPoints = opponent['points']
+    #dla każdego slota
+    for i in range(1,5):
+        #ściąga kartę ze slotu
+        playerSlot = playerSlots[playerSlots['slot'] == i].value[1]
+        opponentSlot = opponentSlots[opponentSlots['slot'] == i].value[1]
+        #pobiera info o kartach z bazy
+        playerCard = CardDataMapper.__getCardNameById__(playerSlot['CardId'])
+        opponentCard = CardDataMapper.__getCardNameById__(opponentSlot['CardId'])
+        #karty walczą
+        fightRes = cardsFight(playerCard.atk, playerCard.hp, opponentCard.atk, opponentCard.hp)
+        #aktualizuje punkty gracza
+        #punkty przeciwnika tylko liczy i zwraca, bo przeciwnik sam sobie zaktualizuje we własnym zapytaniu
+        if fightRes == 'a':
+            player['points'] += 1
+        else:
+            opponentPoints += 1
+
+    #sprawdza wynik dla gracza z sid z argumentu
+    gameRes = 'none'
+    if opponentPoints > 15:
+        gameRes = 'loss'
+    elif player['points'] > 15:
+        gameRes = 'win'
+
+    #wysyła info do gracza w formie {'wynik': win/loss/none, 'yourPoints': points, 'opponentPoints': points}
+    return {'wynik': gameRes, 'yourPoints': player['points'], 'opponentPoints': opponentPoints}
+    
+
+def cardsFight(aAtk, aHp, bAtk, bHp):
+    while(aHp > 0 and bHp > 0):
+            aHp -= bAtk
+            bHp -= aAtk
+    
+    if aHp < 0 and bHp < 0:
+        return 'r'
+    elif aHp < 0:
+        return 'b'
+    else:
+        return 'a'
