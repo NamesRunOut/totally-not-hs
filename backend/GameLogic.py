@@ -9,9 +9,6 @@ gameSlots = pd.DataFrame(columns = ['gameId', 'PlayerID','slot','CardId'])
 
 HighestGameID = 0
 
-def endOfRound():
-    pass
-
 def join(playerName, playerEmail,sid):
     #try get existing player
     p = PlayerDataMapper.getPlayerByName(playerName)
@@ -43,8 +40,6 @@ def join(playerName, playerEmail,sid):
 
     
     
-
-
 def beginOfRound(sid, playerName, gameId):
     playerId = PlayerDataMapper.__getPlayerIdByName__(playerName)
     playerGames = players[players['playerId']==playerId]
@@ -53,8 +48,12 @@ def beginOfRound(sid, playerName, gameId):
     if(row['round']%3==0):
         row['mana']=100
     gameSlots = gameSlots.drop(gameSlots[gameSlots.playerId == playerId & gameSlots.gameId == gameId])
-    #TODO: wysłać karty gracza + puste sloty
-    return True
+    cardIds = PlayerDataMapper.getPlayerCards(playerId)
+    cardNames = map(lambda x: CardDataMapper.__getCardNameById__(x), cardIds)
+    return {'cards': cardNames, 'slot1': [], 'slot2': [], 'slot3': [], 'slot4': []}
+
+
+
 
 def putCardInSlot(sid, cardName, slotNumber, gameId):
     player = players[players['sid'] == sid].value[1]

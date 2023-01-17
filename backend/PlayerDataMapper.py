@@ -199,3 +199,16 @@ def __getPlayerIdByName__(name):
     if p!=None:
         return p[0]
     return None
+
+#pobieranie id kart, które ma player
+def getPlayerCards(id):
+    conn = sqlite3.connect('db.sqlite3')
+    c = conn.cursor()
+    query = " SELECT idCard FFROM CardsRelation WHERE idPlayer='{}'".format(id)
+    c.execute(query)
+    p = c.fetchall()
+    conn.commit()
+    conn.close()
+    if p!=None:
+        return p[0]
+    return None

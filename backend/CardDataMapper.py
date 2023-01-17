@@ -123,6 +123,7 @@ def __checkIfRowIsInDb(playerId,cardId):
     p = c.fetchone()
     conn.commit()
     conn.close()
+    
     if p==None:
         return True
     return False
