@@ -14,6 +14,7 @@ def connect(sid, environ):
     print(sid,'connected')
     global client_count
     client_count+=1
+    GameLogic.putTestCardsToSlots()
     #GameLogic.join('michal', 'sraczkowaty',sid)
     #CardDataMapper.DeleteCard('card6')
     #CardDataMapper.AssignCardFor('kitku','card4')

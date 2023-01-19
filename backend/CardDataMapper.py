@@ -27,6 +27,23 @@ def getCardByName(name):
     conn.close
     return None
 
+
+def getCardById(id):
+
+    conn = sqlite3.connect('db.sqlite3')
+    c = conn.cursor()
+    query =  "SELECT id, name, description, mana, hp, atk FROM Card WHERE id='{}'".format(id)
+    c.execute(query)
+    p = c.fetchone()
+    if(p != None):
+        print(p)
+        pClass = Card(p[0], p[1], p[2], p[3] ,p[4], p[5])
+        conn.commit()
+        conn.close
+        return pClass
+    conn.commit()
+    conn.close
+    return None
 #pass
 def CreateCard(name, description, mana, hp, atk):
     if getCardByName(name) == None:

@@ -84,22 +84,29 @@ def beginOfRound(sid,  playerName, gameId):
     return {'cards': cardNames, 'slot1': [], 'slot2': [], 'slot3': [], 'slot4': []}
 
 
-
+#['gameId', 'PlayerID','slot','CardId'])
+def putTestCardsToSlots():
+    global gameSlots
+    gameSlots = {'gameId': [0,0,0,0,0,0,0,0], 'PlayerID': [15, 15, 15, 15, 16, 16, 16, 16], 'slot': [1,2,3,4,1,2,3,4], 'CardId': [10, 11, 12, 13, 4, 7, 8, 9]}
+    gameSlots = pd.DataFrame(data=gameSlots)
+    HighestGameID = 0
+    print(gameSlots)
 
 def putCardInSlot(sid, cardName, slotNumber, gameId):
+    print("AAAAAAAA")
+    print(players)
     player = players[players['sid'] == sid]
-    print("AAAAAAAAAAAAAAAAAAAAAAA")
-    print("player: ", player)
+    playerIndex = player.index.values.tolist()[0]
     #chceck czy gracz ma taką kartę czy nie oszukuje
     cardId = CardDataMapper.__getCardIdByName__(cardName) 
-    if(CardDataMapper.__checkIfRowIsInDb(player.at[0, 'id'], cardId)):
+    if(CardDataMapper.__checkIfRowIsInDb(player.at[playerIndex, 'id'], cardId)):
         return False
     #check czy ma wystarczającą mane
-    if(player.at[0, 'mana'] < 1):
+    if(player.at[playerIndex, 'mana'] < 1):
         return False
     #wrzuca karte na slot, zwraca sloty gracza w formie {'slot1': [nazwKart], 'slot2':...}
-    player.at[0, 'mana'] -= 1
-    new_card = [gameId, player.at[0,'id'], slotNumber, cardId]
+    player.at[playerIndex, 'mana'] -= 1
+    new_card = [gameId, player.at[playerIndex,'id'], slotNumber, cardId]
     gameSlots.loc[len(gameSlots)] = new_card
     res = {}
     for i in range(1, 5):
@@ -114,44 +121,61 @@ def putCardInSlot(sid, cardName, slotNumber, gameId):
 
 
 def endOfRound(sid, playerName, gameId):
+    print("END OF ROUND")
     #ściąga informacje o graczu
-    player = players[players['sid'] == sid].value[1]
-    #ściąga informacje o przeciwniku gracza
-    opponent = players[players['gameId'] == gameId and players['sid'] != sid].value[1]
-    #ściąga informacje o kartach w slotach obu graczy
-    playerSlots = gameSlots[gameSlots['gameId'] == gameId and gameSlots['playerID'] == player['id']]
-    opponentSlots = gameSlots[gameSlots['gameId'] == gameId and gameSlots['playerID'] == opponent['id']]
+    player = players[players['sid'] == sid]
+    print("player: ", player)
     
-    opponentPoints = opponent['points']
+    #ściąga informacje o przeciwniku gracza
+    opponent = players[(players['gameId'] == gameId) & (players['sid'] != sid)]
+    print("opponent: ", opponent)
+    #ściąga informacje o kartach w slotach obu graczy
+    playerId = list(player['id'])
+    playerId = playerId[0]
+
+    playerSlots = gameSlots[(gameSlots['gameId'] == gameId) & (gameSlots['PlayerID'] == playerId)]
+    print("playerslots: ", playerSlots)
+    opponentId = list(opponent['id'])
+    opponentId = opponentId[0]
+    opponentSlots = gameSlots[(gameSlots['gameId'] == gameId) & (gameSlots['PlayerID'] == opponentId)]
+    print("opponentSlots: ", opponentSlots)
+    opponentPoints = list(opponent['points'])
+    opponentPoints = opponentPoints[0]
+    print("opponent points: ", opponentPoints)
     #dla każdego slota
     for i in range(1,5):
         #ściąga kartę ze slotu
-        playerSlot = playerSlots[playerSlots['slot'] == i].value[1]
-        opponentSlot = opponentSlots[opponentSlots['slot'] == i].value[1]
+        playerSlot = playerSlots[playerSlots['slot'] == i]
+        opponentSlot = opponentSlots[opponentSlots['slot'] == i]
         #pobiera info o kartach z bazy
-        playerCard = CardDataMapper.__getCardNameById__(playerSlot['CardId'])
-        opponentCard = CardDataMapper.__getCardNameById__(opponentSlot['CardId'])
+        cardIdP = list(playerSlot['CardId'])[0]
+        playerCard = CardDataMapper.getCardById(cardIdP)
+        cardIdO = list(opponentSlot['CardId'])[0]
+        opponentCard = CardDataMapper.getCardById(cardIdO)
         #karty walczą
         fightRes = cardsFight(playerCard.atk, playerCard.hp, opponentCard.atk, opponentCard.hp)
         #aktualizuje punkty gracza
         #punkty przeciwnika tylko liczy i zwraca, bo przeciwnik sam sobie zaktualizuje we własnym zapytaniu
         if fightRes == 'a':
-            player['points'] += 1
+            playerIndex = player.index.values.tolist()[0]
+            player.at[playerIndex, 'points'] += 1
         else:
             opponentPoints += 1
 
     #sprawdza wynik dla gracza z sid z argumentu
+    playerIndex = player.index.values.tolist()[0]
     gameRes = 'none'
     if opponentPoints > 15:
         gameRes = 'loss'
-    elif player['points'] > 15:
+    elif player.at[playerIndex, 'points'] > 15:
         gameRes = 'win'
 
     #wysyła info do gracza w formie {'wynik': win/loss/none, 'yourPoints': points, 'opponentPoints': points}
-    return {'wynik': gameRes, 'yourPoints': player['points'], 'opponentPoints': opponentPoints}
+    return {'wynik': gameRes, 'yourPoints': player.at[playerIndex, 'points'], 'opponentPoints': opponentPoints}
     
 
 def cardsFight(aAtk, aHp, bAtk, bHp):
+    print("fight")
     while(aHp > 0 and bHp > 0):
             aHp -= bAtk
             bHp -= aAtk
