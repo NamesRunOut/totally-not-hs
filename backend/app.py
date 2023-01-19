@@ -2,12 +2,12 @@ import socketio
 import PlayerDataMapper
 import CardDataMapper
 import GameLogic
-sio = socketio.Server(cors_allowed_origins=['*']) 
+
+sio = socketio.Server(cors_allowed_origins='*') 
 app = socketio.WSGIApp(sio,static_files={
     '/': './public/'
 })
 client_count = 0
-
 
 @sio.event
 def connect(sid, environ):
@@ -34,7 +34,8 @@ def connect(sid, environ):
 # last_id = 20
 @sio.event
 def join(sid, data):
-    return GameLogic.join(data['name'], data['email'],sid)
+    res = GameLogic.join(data['name'], data['email'],sid)
+    sio.emit("join", res, sid)
 
 #pobiera karty graczy dla zadanego id gry i zwraca na front
 #dodaje manę
@@ -42,18 +43,24 @@ def join(sid, data):
 #opróżnia sloty
 @sio.event
 def beginRound(sid,data):
-    return GameLogic.beginOfRound(sid,data['name'],data['gameId'])
+    res = GameLogic.beginOfRound(sid,data['name'],data['gameId'])
+    sio.emit("beginRound", res, sid)
+    #return GameLogic.beginOfRound(sid,data['name'],data['gameId'])
 
 #karty się biją itd...
 #wynikiem ma być albo koniec gry tzn propka {'isFinished': True, 'isWinner' = True} do wygranego sida, natomiast do przegranego co innego...
 @sio.event
 def endOfRound(sid, data):
-    return GameLogic.endOfRound(sid,data['name'],data['gameId'])
+    res = GameLogic.endOfRound(sid,data['name'],data['gameId'])
+    sio.emit("endOfRound", res, sid)
+    #return GameLogic.endOfRound(sid,data['name'],data['gameId'])
 
 #wrzuca kartę o zadanej nazwie i zwraca sloty usera z wypełnione odpowiednio, zmniejsza mane gracza, uwaga jak ma za mało many to operacja nie powinna się powieść, zwróćmy wtedy false
 @sio.event
 def putCardInSlot(sid, data):
-    return GameLogic.putCardInSlot(sid,data['cardName'],data['slotNumber'], data['gameId'])
+    res = GameLogic.putCardInSlot(sid,data['cardName'],data['slotNumber'], data['gameId'])
+    sio.emit("putCardInSlot", res, sid)
+    #return GameLogic.putCardInSlot(sid,data['cardName'],data['slotNumber'], data['gameId'])
 
 
 
