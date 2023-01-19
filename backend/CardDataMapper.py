@@ -144,3 +144,16 @@ def __checkIfRowIsInDb(playerId,cardId):
     if p==None:
         return True
     return False
+
+
+def getAllCardIds():
+    conn = sqlite3.connect('db.sqlite3')
+    c = conn.cursor()
+    query =  "SELECT id FROM Card"
+    c.execute(query)
+    p = c.fetchall()
+    conn.commit()
+    conn.close()
+    if p != None:
+        return list(map(lambda x : x[0], p))
+    return None

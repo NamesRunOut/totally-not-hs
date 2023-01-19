@@ -40,6 +40,10 @@ def join(playerName, playerEmail,sid):
         return {'canPlay': True, 'gameID': HighestGameID-1}
 """
 
+
+
+
+
 def join(playerName, playerEmail,sid):
     #try get existing player
     p = PlayerDataMapper.getPlayerByName(playerName)
@@ -92,7 +96,12 @@ def getCards(playerName):
     #print(cardsInfo)
     return cardsInfo
 
-
+def getAllCards():
+    cardIds = CardDataMapper.getAllCardIds()
+    cards = map(lambda x: CardDataMapper.getCardById(x), cardIds)
+    cardsInfo = list(map(lambda x: x.getDict(), cards))
+    #print(cardsInfo)
+    return cardsInfo
 
 #['gameId', 'PlayerID','slot','CardId'])
 def putTestCardsToSlots():
