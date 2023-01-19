@@ -1,8 +1,12 @@
-import sqlite3
-conn = sqlite3.connect('db.sqlite3')
-c = conn.cursor()
+import CardDataMapper
+CardDataMapper.AssignCardFor("sraczkowaty", "card9")
+CardDataMapper.AssignCardFor("sraczkowaty", "card8")
+CardDataMapper.AssignCardFor("sraczkowaty", "card7")
+CardDataMapper.AssignCardFor("sraczkowaty", "card6")
 
-c.execute('''CREATE TABLE Player (id INTEGER, points INTEGER, name TEXT)''')
 
-conn.commit()
-conn.close
+CardDataMapper.AssignCardFor("michal", "card4")
+CardDataMapper.AssignCardFor("michal", "new card")
+CardDataMapper.AssignCardFor("michal", "card3")
+CardDataMapper.AssignCardFor("michal", "card5")
+

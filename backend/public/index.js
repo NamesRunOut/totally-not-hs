@@ -19,3 +19,22 @@ sio.on('disconnect', () => {
 sio.on('client_count', (count) => {
     console.log(count + " connected clients")
 })
+
+
+sio.on('message', (message) => {
+    console.log(message)
+})
+
+form = document.getElementById("userInfo")
+form.onsubmit = function(e) {
+    e.preventDefault();
+    console.log("jest")
+    
+    name1 = document.getElementById("name").value;
+    email1 = document.getElementById("email").value;
+
+    sio.emit('join',{name: name1, email: email1}, (result) => {
+        console.log(result)
+    });
+
+}

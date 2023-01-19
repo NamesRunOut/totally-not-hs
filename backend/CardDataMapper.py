@@ -1,9 +1,17 @@
 import sqlite3
 import PlayerDataMapper
 from Card import Card
+from CardIdentityMap import CardIdentityMap
+
+identityMap = CardIdentityMap()
+#identity map sprawdza czy nie ściągamy dwa razy tego samego obiektu
 
 #pass
 def getCardByName(name):
+    card = identityMap.get(name)
+    if card:
+        return card
+
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
     query =  "SELECT id, name, description, mana, hp, atk FROM Card WHERE name='{}'".format(name)
@@ -19,6 +27,23 @@ def getCardByName(name):
     conn.close
     return None
 
+
+def getCardById(id):
+
+    conn = sqlite3.connect('db.sqlite3')
+    c = conn.cursor()
+    query =  "SELECT id, name, description, mana, hp, atk FROM Card WHERE id='{}'".format(id)
+    c.execute(query)
+    p = c.fetchone()
+    if(p != None):
+        print(p)
+        pClass = Card(p[0], p[1], p[2], p[3] ,p[4], p[5])
+        conn.commit()
+        conn.close
+        return pClass
+    conn.commit()
+    conn.close
+    return None
 #pass
 def CreateCard(name, description, mana, hp, atk):
     if getCardByName(name) == None:
@@ -95,14 +120,27 @@ def __getCardIdByName__(name):
         return p[0]
     return None
 
-def __checkIfRowIsInDb(playerId,cardId):
+def __getCardNameById__(id):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
-    query =  "SELECT idPlayer From CardsRelation WHERE idCard={} and idPlayer={}".format(cardId,playerId)
+    query =  "SELECT name FROM Card WHERE id='{}'".format(id)
     c.execute(query)
     p = c.fetchone()
     conn.commit()
     conn.close()
+    if p!=None:
+        return p[0]
+    return None
+
+def __checkIfRowIsInDb(playerId,cardId):
+    conn = sqlite3.connect('db.sqlite3')
+    c = conn.cursor()
+    query =  "SELECT idPlayer From CardsRelation WHERE idCard={} and idPlayer={}".format(str(cardId),str(playerId))
+    c.execute(query)
+    p = c.fetchone()
+    conn.commit()
+    conn.close()
+    
     if p==None:
         return True
     return False

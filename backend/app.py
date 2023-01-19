@@ -1,7 +1,8 @@
 import socketio
 import PlayerDataMapper
 import CardDataMapper
-sio = socketio.Server() 
+import GameLogic
+sio = socketio.Server(cors_allowed_origins=['*']) 
 app = socketio.WSGIApp(sio,static_files={
     '/': './public/'
 })
@@ -13,6 +14,8 @@ def connect(sid, environ):
     print(sid,'connected')
     global client_count
     client_count+=1
+    GameLogic.putTestCardsToSlots()
+    #GameLogic.join('michal', 'sraczkowaty',sid)
     #CardDataMapper.DeleteCard('card6')
     #CardDataMapper.AssignCardFor('kitku','card4')
     #CardDataMapper.CreateCard('new card','from python sever','si',22,33)
@@ -21,8 +24,38 @@ def connect(sid, environ):
     #PlayerDataMapper.becomeVip('maju',500)
     #PlayerDataMapper.degradateToCommon('maju')
     #PlayerDataMapper.SetPlayerBanition('XD',1)
+    
 
     sio.emit('client_count',client_count)
+
+
+#######################################Logika gry endpoints
+# gamers = []
+# last_id = 20
+@sio.event
+def join(sid, data):
+    return GameLogic.join(data['name'], data['email'],sid)
+
+#pobiera karty graczy dla zadanego id gry i zwraca na front
+#dodaje manę
+#inkrementuje runde
+#opróżnia sloty
+@sio.event
+def beginRound(sid,data):
+    return GameLogic.beginOfRound(sid,data['name'],data['gameId'])
+
+#karty się biją itd...
+#wynikiem ma być albo koniec gry tzn propka {'isFinished': True, 'isWinner' = True} do wygranego sida, natomiast do przegranego co innego...
+@sio.event
+def endOfRound(sid, data):
+    return GameLogic.endOfRound(sid,data['name'],data['gameId'])
+
+#wrzuca kartę o zadanej nazwie i zwraca sloty usera z wypełnione odpowiednio, zmniejsza mane gracza, uwaga jak ma za mało many to operacja nie powinna się powieść, zwróćmy wtedy false
+@sio.event
+def putCardInSlot(sid, data):
+    return GameLogic.putCardInSlot(sid,data['cardName'],data['slotNumber'], data['gameId'])
+
+
 
 #add player###############################################
 @sio.event
