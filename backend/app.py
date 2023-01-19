@@ -44,8 +44,13 @@ def join(sid, data):
 @sio.event
 def getAllCards(sid, data):
     res = GameLogic.getAllCards()
-    sio.emit("getAllCards", res, sid)
+    res2 = {}
+    for i in range(len(res)):
+        res2[i] = res[i]
 
+    print(res2)
+    sio.emit("getAllCards", res2, sid)
+        
 
 @sio.event
 def getCards(sid, data):
