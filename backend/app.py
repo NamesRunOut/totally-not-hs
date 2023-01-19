@@ -35,8 +35,16 @@ def connect(sid, environ):
 @sio.event
 def join(sid, data):
     res = GameLogic.join(data['name'], data['email'],sid)
+    if res['canPlay'] == True:
+        sio.emit("start", True)
     sio.emit("join", res, sid)
 
+
+
+@sio.event
+def getCards(sid, data):
+    res = GameLogic.getCards(data['name'])
+    sio.emit("getCards", res, sid)
 #pobiera karty graczy dla zadanego id gry i zwraca na front
 #dodaje manę
 #inkrementuje runde

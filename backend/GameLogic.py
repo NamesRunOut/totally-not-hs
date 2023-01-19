@@ -78,10 +78,19 @@ def beginOfRound(sid,  playerName, gameId):
     row['round'] =+1
     if(row['round']%3==0):
         row['mana']=100
-    gameSlots = gameSlots.drop(gameSlots[gameSlots.playerId == playerId & gameSlots.gameId == gameId])
+    gameSlots = gameSlots.drop(gameSlots[(gameSlots.playerId == playerId) & (gameSlots.gameId == gameId)])
     cardIds = PlayerDataMapper.getPlayerCards(playerId)
     cardNames = map(lambda x: CardDataMapper.__getCardNameById__(x), cardIds)
     return {'cards': cardNames, 'slot1': [], 'slot2': [], 'slot3': [], 'slot4': []}
+
+def getCards(playerName):
+    playerId = PlayerDataMapper.__getPlayerIdByName__(playerName)
+    cardIds = PlayerDataMapper.getPlayerCards(playerId)
+    cards = map(lambda x: CardDataMapper.getCardById(x), cardIds)
+    cardsInfo = list(map(lambda x: x.getDict(), cards))
+    #print(cardsInfo)
+    return cardsInfo
+
 
 
 #['gameId', 'PlayerID','slot','CardId'])

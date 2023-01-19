@@ -6,3 +6,6 @@ class Card(object):
         self.mana = mana
         self.hp = hp
         self.atk = atk
+
+    def getDict(self):
+        return {'id': self.id, "name": self.name, "description": self.description, "mana": self.mana, "hp": self.hp, "atk": self.atk}

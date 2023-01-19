@@ -204,11 +204,12 @@ def __getPlayerIdByName__(name):
 def getPlayerCards(id):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
-    query = " SELECT idCard FFROM CardsRelation WHERE idPlayer='{}'".format(id)
+    query = " SELECT idCard FROM CardsRelation WHERE idPlayer='{}'".format(id)
     c.execute(query)
     p = c.fetchall()
     conn.commit()
     conn.close()
+
     if p!=None:
-        return p[0]
+        return list(map(lambda x: x[0], p))
     return None
