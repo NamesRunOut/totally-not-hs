@@ -2,7 +2,7 @@ import socketio
 import PlayerDataMapper
 import CardDataMapper
 import GameLogic
-sio = socketio.Server() 
+sio = socketio.Server(cors_allowed_origins=['*']) 
 app = socketio.WSGIApp(sio,static_files={
     '/': './public/'
 })
@@ -14,7 +14,7 @@ def connect(sid, environ):
     print(sid,'connected')
     global client_count
     client_count+=1
-    GameLogic.join('michal', 'sraczkowaty',sid)
+    #GameLogic.join('michal', 'sraczkowaty',sid)
     #CardDataMapper.DeleteCard('card6')
     #CardDataMapper.AssignCardFor('kitku','card4')
     #CardDataMapper.CreateCard('new card','from python sever','si',22,33)
@@ -23,6 +23,7 @@ def connect(sid, environ):
     #PlayerDataMapper.becomeVip('maju',500)
     #PlayerDataMapper.degradateToCommon('maju')
     #PlayerDataMapper.SetPlayerBanition('XD',1)
+    
 
     sio.emit('client_count',client_count)
 

@@ -106,19 +106,19 @@ def __getCardIdByName__(name):
 def __getCardNameById__(id):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
-    query =  "SELECT id FROM Card WHERE id='{}'".format(id)
+    query =  "SELECT name FROM Card WHERE id='{}'".format(id)
     c.execute(query)
     p = c.fetchone()
     conn.commit()
     conn.close()
     if p!=None:
-        return p[1]
+        return p[0]
     return None
 
 def __checkIfRowIsInDb(playerId,cardId):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
-    query =  "SELECT idPlayer From CardsRelation WHERE idCard={} and idPlayer={}".format(cardId,playerId)
+    query =  "SELECT idPlayer From CardsRelation WHERE idCard={} and idPlayer={}".format(str(cardId),str(playerId))
     c.execute(query)
     p = c.fetchone()
     conn.commit()
