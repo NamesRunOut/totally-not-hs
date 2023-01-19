@@ -2,6 +2,7 @@ import socketio
 import PlayerDataMapper
 import CardDataMapper
 import GameLogic
+import random
 
 sio = socketio.Server(cors_allowed_origins='*') 
 app = socketio.WSGIApp(sio,static_files={
@@ -36,7 +37,8 @@ def connect(sid, environ):
 def join(sid, data):
     res = GameLogic.join(data['name'], data['email'],sid)
     if res['canPlay'] == True:
-        sio.emit("start", True)
+        whoStarts = GameLogic.randomStart()
+        sio.emit("start", whoStarts)
     sio.emit("join", res, sid)
 
 

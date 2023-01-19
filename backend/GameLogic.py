@@ -70,7 +70,8 @@ def join(playerName, playerEmail,sid):
         print( players)
         HighestGameID+=1
         return {'canPlay': True, 'gameID': HighestGameID-1}
-    
+
+ 
 def beginOfRound(sid,  playerName, gameId):
     playerId = PlayerDataMapper.__getPlayerIdByName__(playerName)
     playerGames = players[players['playerId']==playerId]
@@ -127,7 +128,13 @@ def putCardInSlot(sid, cardName, slotNumber, gameId):
     
     return res
 
-
+import random
+def randomStart():
+    i = random.randint(0, 2)
+    if i == 0:
+        return players.at[0, 'id']
+    else:
+        return players.at[1, 'id']
 
 def endOfRound(sid, playerName, gameId):
     print("END OF ROUND")
