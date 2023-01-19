@@ -15,6 +15,12 @@ class Card extends BaseCard {
     get rarePrice(): number {
         return this._rarePrice;
     }
+    set rarePrice(price: number) {
+        this._rarePrice = price;
+    }
+    get basicPrice() {
+        return this._basicPrice;
+    }
     set basicPrice(value: number) {
         this._basicPrice = value;
     }

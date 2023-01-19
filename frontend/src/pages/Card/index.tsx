@@ -29,10 +29,10 @@ const Cards = () => {
             {state.ownedCards.has(card.id) ? <Owned>Owned</Owned> :
             <>
                 <Stats>
-                    <PriceB onClick={() => card.buyIt(dispatch, card.id, "B", setNotification, state.wallet.basic.amount)}>Buy using B: {card.basicPrice || 0}</PriceB>
+                    <PriceB onClick={() => card.buyIt(dispatch, card.id, "B", setNotification, state.wallet.basic.amount)}>Buy using B: {card.basicPrice}</PriceB>
                 </Stats>
                 <Stats>
-                    <PriceR onClick={() => card.buyIt(dispatch, card.id, "R", setNotification, state.wallet.rare.amount)}>Buy using R: {card.rarePrice || 0}</PriceR>
+                    <PriceR onClick={() => card.buyIt(dispatch, card.id, "R", setNotification, state.wallet.rare.amount)}>Buy using R: {card.rarePrice}</PriceR>
                 </Stats>
             </>}
         </BaseInfo>

@@ -150,6 +150,7 @@ export const Input = styled.input`
   border-radius: 2px;
   border: none;
   min-width: 10rem;
+  background: ${props => props.theme.colors.font_light};
 `
 
 export const Avatar = styled.img`
@@ -202,4 +203,13 @@ export const PlayerInfo = styled.div`
 export const Param = styled.div`
   font-size: 1.1rem;
   padding-top: 0.25rem;
+`
+
+export const ClassSelector = styled.select`
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 2px;
+  border: none;
+  min-width: 10rem;
+  background: ${props => props.theme.colors.font_light};
 `

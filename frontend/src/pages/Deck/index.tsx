@@ -32,7 +32,7 @@ const Deck = () => {
             <SecondaryButton onClick={() => dispatch({type: 'deselectAll'})} text={"Deselect all"} />
         </OptionButtons>
         {/*@ts-ignore*/}
-        {Array.from(state.ownedCards).map((id: number) => <Card key={toString(id)} card={getCard(id)} onClick={() => select(id)} selected={state.deck.has(id)} />)}
+        {Array.from(state.ownedCards).map((id: number) => <Card key={id.toString()} card={getCard(id)} onClick={() => select(id)} selected={state.deck.has(id)} />)}
     </Wrapper>);
 }
 

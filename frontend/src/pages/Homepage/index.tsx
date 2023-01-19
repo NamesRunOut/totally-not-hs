@@ -5,7 +5,18 @@ import {NotificationContext, NotificationContextType} from "../../contexts/Notif
 import {useNavigate} from "react-router-dom";
 import Classes from "./components/ClassPicker";
 import {adjectives, animals, colors, uniqueNamesGenerator} from 'unique-names-generator';
-import {Avatar, Input, PageWrapper, Param, Play, PlayerInfo, PlayerProfile, PlayGlitch, Wrapper} from "./styles";
+import {
+    Avatar,
+    ClassSelector,
+    Input,
+    PageWrapper,
+    Param,
+    Play,
+    PlayerInfo,
+    PlayerProfile,
+    PlayGlitch,
+    Wrapper
+} from "./styles";
 import {AlertNotificationCreator} from "../../patterns/factory-method";
 import Index from "../../components/Navbar";
 import SecondaryButton from "../../components/SecondaryButton";
@@ -13,6 +24,7 @@ import {rand} from "./utils/rand";
 import {cardList} from "../../utils/card_list";
 import {usePlayer} from "../../contexts/PlayerContext";
 import PrimaryButton from "../../components/NavButton";
+import {motion, Variants} from "framer-motion";
 
 const characterName: string = uniqueNamesGenerator({
     dictionaries: [adjectives, animals],
@@ -26,10 +38,8 @@ const characterName: string = uniqueNamesGenerator({
 // });
 
 const Homepage = () => {
-    const [cards, setCards] = useState<any>([])
-    const [tabs, setTabs] = useState<any>([])
     const [username, setUsername] = useState<string>(characterName)
-    const [selectedTab, setSelectedTab] = useState<any>({id: '0', desc: "Your units receive +2hp", label: "Defensive"});
+    const [pclass, setPClass] = useState("Class1")
     const [setNotification] = useContext<NotificationContextType>(NotificationContext)
     const {state} = usePlayer()
     let navigate = useNavigate()
@@ -46,7 +56,7 @@ const Homepage = () => {
 
     const play = () => {
         let deck: any = []
-        cards.forEach((card: any) => {
+        Array.from(state.deck).forEach((card: any) => {
             if (card.selected) deck.push(card.id)
         })
 
@@ -63,13 +73,11 @@ const Homepage = () => {
             <Avatar src={`https://avatars.dicebear.com/api/bottts/:${username}.svg`}/>
             <PlayerInfo>
                 <Param>Name</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
-                <Param>Class</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
+                <Param>Class</Param><ClassSelector value={pclass} onChange={e => setPClass(e.target.value)}><option value="Class1">Class 1 </option><option value="Class2">Class 2 </option><option value="Class3">Class 3 </option></ClassSelector>
                 <Param>Owned</Param><Param>{Array.from(state.ownedCards).length} cards</Param>
                 <Param>Deck</Param><Param>{Array.from(state.deck).length} cards</Param>
             </PlayerInfo>
         </PlayerProfile>
-        <Classes tabs={tabs} setTabs={setTabs} selectedTab={selectedTab} setSelectedTab={setSelectedTab}/>
-        {/*<CardsList cards={cards} setCards={setCards}/>*/}
     </Wrapper>);
 }
 

@@ -8,6 +8,10 @@ class NullCard extends BaseCard {
     get rarePrice(): number {
         return 0;
     }
+    set rarePrice(price: number) {}
+    get basicPrice() {
+        return 0;
+    }
     set basicPrice(value: number) {}
     get image(): any {
         return "";

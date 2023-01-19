@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {motion} from "framer-motion";
 
 export const TWrapper = styled.div`
   display: flex;
@@ -111,12 +112,16 @@ export const Slot = styled.div`
   height: 100%;
 
   padding: 0.5rem;
-  border-radius: 1rem;
-  background: #282c34;
-  box-shadow: inset 20px 20px 60px #22252c,
-    inset -20px -20px 60px #2e333c;
-  border: 1px solid #61dafb;
+  border-radius: 2px;
+  background: rgba(61, 39, 55, 0.2);
   
+  box-shadow: inset 5px 5px 6px rgba(24, 16, 22, 0.8),
+    inset -4px -4px 5px #59364f;//,
+  //9px 9px 13px rgba(98, 62, 88, 0.2),
+  //  -7px -7px 9px rgba(98, 62, 88, 0.5);
+
+  //border: 1px solid #61dafb;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -161,4 +166,32 @@ export const Config = styled.div`
   flex-direction: column;
   background: transparent;
   z-index: 1001;
+`
+
+export const WaitMessage = styled.h1`
+  margin: 5rem auto;
+  text-align: center;
+  width: 100%;
+`
+
+export const RewardPic = styled(motion.img)`
+  position: relative;
+  border-radius: 0.5rem;
+  height: 90vh;
+  max-width: 90vw;
+  width: max-content;
+  z-index: 100;
+`
+
+export const RewardBG = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `

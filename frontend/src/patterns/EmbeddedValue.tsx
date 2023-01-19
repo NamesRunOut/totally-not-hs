@@ -11,7 +11,7 @@ const PlayersStateContext = React.createContext<{state: State; dispatch: Dispatc
 
 function playersReducer(state: State, action: Action) {
     switch (action.type) {
-        case 'addBasicMoney': {
+        case 'getPlayer': {
             return {...state}
         }
         case 'addRareMoney': {
@@ -24,9 +24,11 @@ function playersReducer(state: State, action: Action) {
 }
 
 function PlayersProvider({children}: PlayersProviderProps) {
-    let initArgs = {count: 0, players: [{name: "unnamed", basicCurrencyValue: 0, rareCurrencyValue: 0}]}
+    let initArgs = [{id: 0, name: "unnamed", cards: [], deck: [], hand: [], basicCurrency: 0, rareCurrency: 0}]
     const [state, dispatch] = useReducer(playersReducer, initArgs)
+
     const value = {state, dispatch}
+
     return (
         <PlayersStateContext.Provider value={value}>
             {children}

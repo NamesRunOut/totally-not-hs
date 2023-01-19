@@ -23,8 +23,10 @@ abstract class BaseCard {
 
     abstract buyIt(dispatch:any,id:number,currency: string,setNotification: any,ownCoins: number): void
 
+    abstract set rarePrice(value: number)
     abstract get rarePrice(): number
     abstract set basicPrice(value: number)
+    abstract get basicPrice(): number
     abstract get image(): any
     abstract set image(value: any)
     abstract get id(): number
