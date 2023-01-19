@@ -141,9 +141,9 @@ import random
 def randomStart():
     i = random.randint(0, 2)
     if i == 0:
-        return players.at[0, 'id']
+        return players.at[0, 'sid']
     else:
-        return players.at[1, 'id']
+        return players.at[1, 'sid']
 
 def endOfRound(sid, playerName, gameId):
     print("END OF ROUND")

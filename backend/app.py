@@ -52,6 +52,8 @@ def getAllCards(sid, data):
     sio.emit("getAllCards", res2, sid)
         
 
+
+
 @sio.event
 def getCards(sid, data):
     res = GameLogic.getCards(data['name'])
