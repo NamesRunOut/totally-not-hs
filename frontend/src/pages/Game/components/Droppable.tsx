@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   min-width: 10rem;
   min-height: 15rem;
   overflow: hidden;
+  gap: 0.5rem;
 `
 
 const Droppable = ({ id, items, isMe }) => {

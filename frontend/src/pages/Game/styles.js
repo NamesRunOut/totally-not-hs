@@ -66,7 +66,6 @@ export const Info = styled.div`
   gap: 1rem;
   
   padding-right: 1rem;
-  max-height: 44vh;
 `
 
 export const Avatar = styled.img`
@@ -140,16 +139,20 @@ export const Crystal = styled.div`
 `
 
 export const Endturn = styled.button`
-  border: none;
-  background: #61dafb;
+  border: 1px solid white;
+  background: transparent;
+  color: white;
   padding: 0.5rem;
   font-size: 1.25rem;
-  border-radius: 1rem;
   margin: auto;
+  cursor: pointer;
+
+  :hover{
+    background: white;
+    color: black;
+  }
   
   :disabled{
-    background: #61dafb;
-    color: black;
     opacity: 0.1;
   }
 `

@@ -39,6 +39,8 @@ import Droppable from "./components/Droppable";
 import Item from "./components/Item";
 import { arrayMove, insertAtIndex, removeAtIndex } from "./utils/array";
 import { CardRegistryContext } from '../../patterns/CardRegistry';
+import NavButton from '../../components/NavButton';
+import SecondaryButton from '../../components/SecondaryButton';
 
 const ContainersWrapper = styled.div`
     width: 100%;
@@ -52,22 +54,24 @@ const HandWrapper = styled.div`
     width: 100%;
 `
 
-function Dnd({isMe, gameId}) {
+function Dnd({isMe, gameId, cards, setCards}) {
     const socket = useContext<any>(ServerConnectionContext)
     const [, getCard, registry] = useContext(CardRegistryContext)
-    const [prev, setPrev] = useState({ 
-        slot0: [1, 2],
-        slot1: [4, 5],
-        slot2: [7, 8],
-        slot3: [10],
-        hand: [3,6,9,12,13,14,15,16,17]})
-  const [itemGroups, setItemGroups] = useState({
-    slot0: [1, 2],
-    slot1: [4, 5],
-    slot2: [7, 8],
-    slot3: [10],
-    hand: [3,6,9,12,13,14,15,16,17]
-  });
+//     const [prev, setPrev] = useState({ 
+//         slot1: [1, 2],
+//         slot2: [4, 5],
+//         slot3: [7, 8],
+//         slot4: [10],
+//         hand: [3,6,9,12,13,14,15,16,17]})
+//   const [itemGroups, setItemGroups] = useState({
+//     slot1: [1, 2],
+//     slot2: [4, 5],
+//     slot3: [7, 8],
+//     slot4: [10],
+//     hand: [3,6,9,12,13,14,15,16,17]
+//   });
+    const [prev, setPrev] = useState(cards)
+    const [itemGroups, setItemGroups] = useState(cards)
   const [activeId, setActiveId] = useState(null);
 
   const sensors = useSensors(
@@ -80,17 +84,26 @@ function Dnd({isMe, gameId}) {
 
   useEffect(() => {
     socket.on('putCardInSlot', (e) => {
-        console.log(e)
+      console.log('putCardInSlot', e)
         if (e === false) {
             setItemGroups(prev)
         }
         else {
-            //setPrev(newItems)
+            setPrev(itemGroups)
         }
     })
 
     return () => socket.off('putCardInSlot')
-  }, [socket])
+  }, [socket, prev, itemGroups])
+
+  // useEffect(() => {
+  //   console.log(prev, itemGroups)
+  // }, [prev, itemGroups])
+
+  useEffect(() => {
+    setPrev(cards)
+    setItemGroups(cards)
+  }, [cards])
 
   useEffect(() => {
     if (activeId === null)
@@ -98,8 +111,8 @@ function Dnd({isMe, gameId}) {
         if (slot.length > prev[en].length) {
             for (let el1 of slot){
                 if (!prev[en].some(el => el === el1)) {
-                    console.log("PUT CARD", el1)
-                    socket.emit('putCardInSlot', {cardName: el1, slotNumber: en[en.length-1], gameId: gameId})
+                    console.log("PUT CARD", el1, {cardName: el1, slotNumber: parseInt(en[en.length-1]), gameId: gameId})
+                    socket.emit('putCardInSlot', {cardName: el1, slotNumber: parseInt(en[en.length-1]), gameId: gameId})
                 } 
             }
         }
@@ -242,6 +255,20 @@ const Homepage = () => {
     const [myTurn, setMyTurn] = useState(false)
     const [gameId, setGameId] = useState(-1)
     const [canPlay, setCanPlay] = useState(false)
+    const [myCards, setMyCards] = useState({
+        hand: [],
+        slot1: [],
+        slot2: [],
+        slot3: [],
+        slot4: []
+      })
+    
+    const [enemyCards, setEnemyCards] = useState({
+        slot1: [],
+        slot2: [],
+        slot3: [],
+        slot4: []
+      })
 
     const [game, setGame] = useState<any>({
         myid: 0,
@@ -260,6 +287,9 @@ const Homepage = () => {
     const [selected, setSelected] = useState<any>(null)
     const [setNotification] = useContext<NotificationContextType>(NotificationContext)
     const [showReward, setShowReward] = useState(false)
+    const [showPunishment, setShowPunishment] = useState(false)
+    const [result, setResult] = useState({name: "", wynik: "none", yourPoints: 0, opponentPoints: 0})
+
     const constraintsRef = useRef(null)
     const handconstraintsRef = useRef(null)
 
@@ -314,19 +344,66 @@ const Homepage = () => {
 
     useEffect(() => {
         console.log('myTurn', myTurn)
-        if (myTurn) setTimeout(() => socket.emit('beginRound', {name: state.name, gameId: gameId}), 2000)
+        if (myTurn) socket.emit('beginRound', {name: state.name, gameId: gameId})
     }, [myTurn])
 
     useEffect(() => {
-        // socket.on('getCards', (e: any) => {
-        //     console.log(e)
-        // });
         socket.on('beginRound', (e: any) => {
-            console.log(e)
+            console.log('beginRound', e, e.cards.reduce((acc, curr) => {acc.push(curr.id); return acc}, []))
+            setMyCards({ 
+              slot1: e.slot1,
+              slot2: e.slot2,
+              slot3: e.slot3,
+              slot4: e.slot4,
+              hand: e.cards.reduce((acc, curr) => {acc.push(curr.id); return acc}, [])
+            })
         });
         return () => {
             socket.off('beginRound')
-            // socket.off('getCards')
+        };
+    }, [socket]);
+
+    useEffect(() => {
+      socket.on('endOfRound', (e: any) => {
+        console.log('endOfRound', e)
+          setResult(e)
+      });
+      socket.on('endOfRoundYourCards', (e: any) => {
+        console.log('endOfRoundYourCards', e)
+          setMyCards({ 
+            slot1: e.slot1,
+            slot2: e.slot2,
+            slot3: e.slot3,
+            slot4: e.slot4,
+            hand: e.cards || []})
+          setMyTurn(false)
+      });
+      socket.on('endOfRoundOpponentCards', (e: any) => {
+        console.log('endOfRoundOpponentCards', e)
+          setEnemyCards({ 
+            slot1: e.slot1,
+            slot2: e.slot2,
+            slot3: e.slot3,
+            slot4: e.slot4,
+            hand: []})
+          setMyTurn(true)
+      });
+
+      return () => {
+        socket.off('endOfRound')
+        socket.off('endOfRoundYourCards')
+        socket.off('endOfRoundOpponentCards')
+      };
+    }, [socket]);
+
+    useEffect(() => {
+        socket.emit('getCards', {name: state.name})
+        socket.on('getCards', (e: any) => {
+            console.log('getCards', e)
+            // setMyCards(e)
+        });
+        return () => {
+            socket.off('getCards')
         };
     }, [socket]);
 
@@ -334,6 +411,13 @@ const Homepage = () => {
         // socket.emit('getCards', {name: state.name})
         console.log('gameId', gameId)
     }, [gameId])
+
+    useEffect(() => {
+      if (result.wynik !== "none") {
+        if (result.name === state.name) setShowReward(true)
+        else setShowPunishment(true)
+      }
+  }, [result])
 
     useEffect(() => {
         if (game?.victor) setNotification(new InfoNotificationCreator(game?.victormessage).getNotification())
@@ -358,19 +442,21 @@ const Homepage = () => {
                         damping: 20
                     }}
                 />
-                {/*<RewardPic*/}
-                {/*    src={`https://cataas.com/cat/cute/says/what%20a%20loser`}*/}
-                {/*    drag*/}
-                {/*    dragConstraints={constraintsRef}*/}
-                {/*    onClick={e => e.stopPropagation()}*/}
-                {/*    initial={{ rotate: 0, scale: 0 }}*/}
-                {/*    animate={{ rotate: 180, scale: 1 }}*/}
-                {/*    transition={{*/}
-                {/*        type: "spring",*/}
-                {/*        stiffness: 260,*/}
-                {/*        damping: 20*/}
-                {/*    }}*/}
-                {/*/>*/}
+            </RewardBG>}
+            {showPunishment && <RewardBG onClick={() => setShowReward(false)} initial={{ scale: 0 }} animate={{ rotate: 180, scale: 1 }}>
+                <RewardPic
+                  src={`https://cataas.com/cat/cute/says/what%20a%20loser`}
+                  drag
+                  dragConstraints={constraintsRef}
+                  onClick={e => e.stopPropagation()}
+                  initial={{ rotate: 0, scale: 0 }}
+                  animate={{ rotate: 180, scale: 1 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 260,
+                    damping: 20
+                  }}
+                />
             </RewardBG>}
 
             <Config>
@@ -382,14 +468,14 @@ const Homepage = () => {
                     <h3>{game.player1._username}</h3>
                     <Avatar src={`https://avatars.dicebear.com/api/bottts/:${game.player1._username}.svg`}/>
                     <Desc>
-                        <h3>Score: {game.player1._score}</h3>
-                        <h3>Cards in hand: {game.player1._hand.length}</h3>
-                        <h3>Cards remaining in deck: {game.player1._deck.length}</h3>
+                        <h3>Score: {result.opponentPoints}</h3>
+                        <h3>Cards in hand: {enemyCards.hand?.length || "??"}</h3>
+                        {/* <h3>Cards remaining in deck: {game.player1._deck.length}</h3> */}
                     </Desc>
                     <PlayerMana amount={game.player1._mana}/>
                 </Info>
                 <Board1>
-                    <Dnd isMe={false} gameId={gameId} />
+                    <Dnd isMe={false} gameId={gameId} cards={enemyCards} setCards={setEnemyCards} />
                 </Board1>
             </Player1>
 
@@ -400,15 +486,15 @@ const Homepage = () => {
                     <h3>{state.name}</h3>
                     <Avatar src={`https://avatars.dicebear.com/api/bottts/:${state.name}.svg`}/>
                     <Desc>
-                        <h3>Score: {game.player2._score}</h3>
-                        <h3>Cards in hand: {game.player2._hand.length}</h3>
-                        <h3>Cards remaining in deck: {game.player2._deck.length}</h3>
+                        <h3>Score: {result.yourPoints}</h3>
+                        <h3>Cards in hand: {myCards.hand?.length || "??"}</h3>
+                        {/* <h3>Cards remaining in deck: {game.player2._deck.length}</h3> */}
                     </Desc>
                     <PlayerMana amount={game.player2._mana}/>
-                    <Endturn onClick={nextTurn} disabled={!myTurn}>End turn</Endturn>
+                    {myTurn && <span><SecondaryButton onClick={nextTurn} text={"End turn"} /></span>}
                 </Info>
                 <Board2> 
-                    <Dnd isMe={true} gameId={gameId} />
+                    <Dnd isMe={true} gameId={gameId} cards={myCards} setCards={setMyCards} />
                 </Board2>
             </Player2>
         </Wrapper>

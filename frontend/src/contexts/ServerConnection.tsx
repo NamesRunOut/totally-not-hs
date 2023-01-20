@@ -14,8 +14,8 @@ const ServerConnection = (props: { children: boolean | React.ReactChild | React.
     }, [])
 
     useEffect(() => {
-        const inter = setInterval(() => console.log(socket?.connected, socket), 20000)
-        return () => clearInterval(inter)
+        // const inter = setInterval(() => console.log(socket?.connected, socket), 20000)
+        // return () => clearInterval(inter)
     }, [socket])
 
     // useEffect(() => {
