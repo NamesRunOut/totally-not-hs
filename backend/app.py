@@ -73,7 +73,9 @@ def beginRound(sid,data):
 @sio.event
 def endOfRound(sid, data):
     res = GameLogic.endOfRound(sid,data['name'],data['gameId'])
-    sio.emit("endOfRound", res, sid)
+    sio.emit("endOfRoundYourCards", res[1], sid)
+    sio.emit("endOfRoundOpponentCards", res[1], res[2])
+    sio.emit("endOfRound", res[0])
     #return GameLogic.endOfRound(sid,data['name'],data['gameId'])
 
 #wrzuca kartę o zadanej nazwie i zwraca sloty usera z wypełnione odpowiednio, zmniejsza mane gracza, uwaga jak ma za mało many to operacja nie powinna się powieść, zwróćmy wtedy false

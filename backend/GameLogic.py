@@ -142,6 +142,15 @@ def putCardInSlot(sid, cardId, slotNumber, gameId):
     
     return res
 
+def getDictOfPlayersSlot(playerId, gameId):
+    res = {}
+    for i in range(1, 5):
+        slot = gameSlots[(gameSlots['slot'] == i) & (gameSlots['PlayerID'] == playerId) & (gameSlots['gameId'] == gameId)]
+        slotName = "slot" + str(i)
+        cardIds = slot['CardId'].tolist()
+        arr = [CardDataMapper.__getCardNameById__(x) for x in cardIds]
+        res[slotName] = arr
+
 import random
 def randomStart():
     i = random.randint(0, 2)
@@ -149,6 +158,10 @@ def randomStart():
         return players.at[0, 'sid']
     else:
         return players.at[1, 'sid']
+
+
+
+
 
 def endOfRound(sid, playerName, gameId):
     print("END OF ROUND")
@@ -160,8 +173,14 @@ def endOfRound(sid, playerName, gameId):
     opponent = players[(players['gameId'] == gameId) & (players['sid'] != sid)]
     print("opponent: ", opponent)
     #ściąga informacje o kartach w slotach obu graczy
+
     playerId = list(player['id'])
     playerId = playerId[0]
+
+    opponentSid = list(opponent['sid'])[0]
+    playersSlots = getDictOfPlayersSlot(playerId, gameId)
+    
+
 
     playerSlots = gameSlots[(gameSlots['gameId'] == gameId) & (gameSlots['PlayerID'] == playerId)]
     print("playerslots: ", playerSlots)
@@ -172,36 +191,30 @@ def endOfRound(sid, playerName, gameId):
     opponentPoints = list(opponent['points'])
     opponentPoints = opponentPoints[0]
     print("opponent points: ", opponentPoints)
+    
     #dla każdego slota
     for i in range(1,5):
         #ściąga kartę ze slotu
         playerSlot = playerSlots[playerSlots['slot'] == i]
         opponentSlot = opponentSlots[opponentSlots['slot'] == i]
         #pobiera info o kartach z bazy
-        cardIdP = list(playerSlot['CardId'])[0]
-        playerCardhp = 0
-        opponentCardhp = 0
-        playerCardatk = 0
-        opponentCardatk = 0
-        if(len(cardIdP) > 0):
+        cardIdP = list(playerSlot['CardId'])
+        cardIdO = list(opponentSlot['CardId'])
+        if len(cardIdO) == 0 or len(cardIdP) == 0:
+            fightRes = 'r'
+        else:
+            cardIdP = cardIdP[0]
+            cardIdO = cardIdO[0]
             playerCard = CardDataMapper.getCardById(cardIdP)
-            playerCardhp = playerCard.hp
-            playerCardatk = playerCard.atk
-            
-        cardIdO = list(opponentSlot['CardId'])[0]
-        if(len(cardIdO) > 0):
             opponentCard = CardDataMapper.getCardById(cardIdO)
-            opponentCardhp = opponentCard.hp
-            ooponentCardatk = opponentCard.atk
-
-        #karty walczą
-        fightRes = cardsFight(playerCardatk, playerCardhp, opponentCardatk, opponentCardhp)
+            #karty walczą
+            fightRes = cardsFight(playerCard.atk, playerCard.hp, opponentCard.atk, opponentCard.hp)
         #aktualizuje punkty gracza
         #punkty przeciwnika tylko liczy i zwraca, bo przeciwnik sam sobie zaktualizuje we własnym zapytaniu
         if fightRes == 'a':
             playerIndex = player.index.values.tolist()[0]
             player.at[playerIndex, 'points'] += 1
-        else:
+        elif fightRes == 'b':
             opponentPoints += 1
 
     #sprawdza wynik dla gracza z sid z argumentu
@@ -212,8 +225,9 @@ def endOfRound(sid, playerName, gameId):
     elif player.at[playerIndex, 'points'] > 15:
         gameRes = 'win'
 
+
     #wysyła info do gracza w formie {'wynik': win/loss/none, 'yourPoints': points, 'opponentPoints': points}
-    return {'wynik': gameRes, 'yourPoints': player.at[playerIndex, 'points'], 'opponentPoints': opponentPoints}
+    return [{'name': playerName,'wynik': gameRes, 'yourPoints': player.at[playerIndex, 'points'], 'opponentPoints': opponentPoints}, playersSlots, opponentSid]
     
 
 def cardsFight(aAtk, aHp, bAtk, bHp):

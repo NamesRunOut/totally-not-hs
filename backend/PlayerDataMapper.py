@@ -145,6 +145,23 @@ def getPlayerById(id):
     conn.close
     return None
 
+def getPlayerNameById(id):
+    conn = sqlite3.connect('db.sqlite3')
+    c = conn.cursor()
+    query =  "SELECT (name, health, email, points) FROM Player WHERE id={}".format(id)
+    c.execute(query)
+    p = c.fetchone()
+    if(p != None):
+        print(p)
+        pClass = Player(p[0], p[1], p[2], p[3],p[4])
+        conn.commit()
+        conn.close
+        return pClass
+    conn.commit()
+    conn.close
+    return None
+
+
 #pass
 def getPlayerByName(name):
     conn = sqlite3.connect('db.sqlite3')
