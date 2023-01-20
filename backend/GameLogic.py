@@ -78,14 +78,19 @@ def join(playerName, playerEmail,sid):
  
 def beginOfRound(sid,  playerName, gameId):
     playerId = PlayerDataMapper.__getPlayerIdByName__(playerName)
-    playerGames = players[players['playerId']==playerId]
-    row = playerGames[playerGames['gameID'] == gameId].value[1]
-    row['round'] =+1
-    if(row['round']%3==0):
-        row['mana']=100
-    gameSlots = gameSlots.drop(gameSlots[(gameSlots.playerId == playerId) & (gameSlots.gameId == gameId)])
+    playerGames = players[players['id']==playerId]
+    
+    row = playerGames[playerGames['gameId'] == gameId]
+    rowIndex = row.index.values.tolist()[0]
+    row.at[rowIndex, 'round'] =+1
+    if(row.at[rowIndex, 'round']%3==0):
+        row.at[rowIndex, 'mana']=100
+    global gameSlots
+    gameSlots = pd.DataFrame(columns = ['gameId', 'PlayerID','slot','CardId'])
+    #gameSlots = gameSlots.drop(gameSlots[(gameSlots.playerId == playerId) & (gameSlots.gameId == gameId)])
     cardIds = PlayerDataMapper.getPlayerCards(playerId)
-    cardNames = map(lambda x: CardDataMapper.__getCardNameById__(x), cardIds)
+    cardNames = list(map(lambda x: CardDataMapper.__getCardNameById__(x), cardIds))
+    print(cardNames)
     return {'cards': cardNames, 'slot1': [], 'slot2': [], 'slot3': [], 'slot4': []}
 
 def getCards(playerName):
