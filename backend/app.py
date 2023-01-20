@@ -15,7 +15,7 @@ def connect(sid, environ):
     print(sid,'connected')
     global client_count
     client_count+=1
-    #GameLogic.putTestCardsToSlots()
+    GameLogic.putTestCardsToSlots()
     #GameLogic.join('michal', 'sraczkowaty',sid)
     #CardDataMapper.DeleteCard('card6')
     #CardDataMapper.AssignCardFor('kitku','card4')
@@ -65,6 +65,7 @@ def getCards(sid, data):
 @sio.event
 def beginRound(sid,data):
     res = GameLogic.beginOfRound(sid,data['name'],data['gameId'])
+    print(res)
     sio.emit("beginRound", res, sid)
     #return GameLogic.beginOfRound(sid,data['name'],data['gameId'])
 

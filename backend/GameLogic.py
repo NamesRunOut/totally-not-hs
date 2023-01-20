@@ -91,7 +91,7 @@ def beginOfRound(sid,  playerName, gameId):
     cardIds = PlayerDataMapper.getPlayerCards(playerId)
     cardNames = list(map(lambda x: CardDataMapper.__getCardNameById__(x), cardIds))
     print(cardNames)
-    return {'cards': cardNames, 'slot1': [], 'slot2': [], 'slot3': [], 'slot4': []}
+    return {'cards': getAllCards(), 'slot1': [], 'slot2': [], 'slot3': [], 'slot4': []}
 
 def getCards(playerName):
     playerId = PlayerDataMapper.__getPlayerIdByName__(playerName)
