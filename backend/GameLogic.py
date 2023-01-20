@@ -132,13 +132,8 @@ def putCardInSlot(sid, cardId, slotNumber, gameId):
     player.at[playerIndex, 'mana'] -= 1
     new_card = [gameId, player.at[playerIndex,'id'], slotNumber, cardId]
     gameSlots.loc[len(gameSlots)] = new_card
-    res = {}
-    for i in range(1, 5):
-        slot = gameSlots[(gameSlots['slot'] == i) & (gameSlots['PlayerID'] == player['id']) & (gameSlots['gameId'] == gameId)]
-        slotName = "slot" + str(i)
-        cardIds = slot['CardId'].tolist()
-        arr = [CardDataMapper.__getCardNameById__(x) for x in cardIds]
-        res[slotName] = arr
+    res = getDictOfPlayersSlot(player.at[playerIndex,'id'], gameId)
+    
     
     return res
 
