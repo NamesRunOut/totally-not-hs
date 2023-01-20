@@ -111,13 +111,13 @@ def putTestCardsToSlots():
     HighestGameID = 0
     print(gameSlots)
 
-def putCardInSlot(sid, cardName, slotNumber, gameId):
+def putCardInSlot(sid, cardId, slotNumber, gameId):
     print("AAAAAAAA")
     print(players)
     player = players[players['sid'] == sid]
     playerIndex = player.index.values.tolist()[0]
     #chceck czy gracz ma taką kartę czy nie oszukuje
-    cardId = CardDataMapper.__getCardIdByName__(cardName) 
+    #cardId = CardDataMapper.__getCardIdByName__(cardName) 
     if(CardDataMapper.__checkIfRowIsInDb(player.at[playerIndex, 'id'], cardId)):
         return False
     #check czy ma wystarczającą mane
