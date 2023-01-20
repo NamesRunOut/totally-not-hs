@@ -62,6 +62,7 @@ const Homepage = () => {
                 {/* <Param>Class</Param><ClassSelector value={pclass} onChange={e => setPClass(e.target.value)}><option value="Class1">Class 1 </option><option value="Class2">Class 2 </option><option value="Class3">Class 3 </option></ClassSelector> */}
                 <Param>Owned</Param><Param>{Array.from(state.ownedCards).length} cards</Param>
                 <Param>Deck</Param><Param>{Array.from(state.deck).length} cards</Param>
+                <Param>Connected?</Param><Param style={{color: socket.connected ? 'lightgreen' : 'lightcoral'}}>{socket.connected ? "yes" : "no"}</Param>
             </PlayerInfo>
         </PlayerProfile>
     </Wrapper>);

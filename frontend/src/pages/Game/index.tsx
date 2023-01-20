@@ -41,39 +41,34 @@ import { arrayMove, insertAtIndex, removeAtIndex } from "./utils/array";
 import { CardRegistryContext } from '../../patterns/CardRegistry';
 
 const ContainersWrapper = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    flex-basis: 400%;
-    gap: 0.5rem;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-column-gap: 0.5rem;
+`
+
+const HandWrapper = styled.div`
+    display: block;
+    width: 100%;
 `
 
 function Dnd({isMe, gameId}) {
     const socket = useContext<any>(ServerConnectionContext)
     const [, getCard, registry] = useContext(CardRegistryContext)
     const [prev, setPrev] = useState({ 
-        slot0: [1, 2, 3],
-        slot1: [4, 5, 6],
-        slot2: [7, 8, 9],
+        slot0: [1, 2],
+        slot1: [4, 5],
+        slot2: [7, 8],
         slot3: [10],
-        hand: [12,13,14,15,16,17]})
+        hand: [3,6,9,12,13,14,15,16,17]})
   const [itemGroups, setItemGroups] = useState({
-    slot0: [1, 2, 3],
-    slot1: [4, 5, 6],
-    slot2: [7, 8, 9],
+    slot0: [1, 2],
+    slot1: [4, 5],
+    slot2: [7, 8],
     slot3: [10],
-    hand: [12,13,14,15,16,17]
+    hand: [3,6,9,12,13,14,15,16,17]
   });
   const [activeId, setActiveId] = useState(null);
-
-  useEffect(() => {
-    for (let [en, slot] of Object.entries(itemGroups)){
-        if (slot.length > prev[en].length) {
-            console.log(slot)
-            socket.emit('putCardInSlot', {cardName, slotNumber, gameId})
-        }
-    }
-    setPrev(itemGroups)
-  }, [itemGroups])
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -82,6 +77,34 @@ function Dnd({isMe, gameId}) {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  useEffect(() => {
+    socket.on('putCardInSlot', (e) => {
+        console.log(e)
+        if (e === false) {
+            setItemGroups(prev)
+        }
+        else {
+            //setPrev(newItems)
+        }
+    })
+
+    return () => socket.off('putCardInSlot')
+  }, [socket])
+
+  useEffect(() => {
+    if (activeId === null)
+    for (let [en, slot] of Object.entries(itemGroups)){
+        if (slot.length > prev[en].length) {
+            for (let el1 of slot){
+                if (!prev[en].some(el => el === el1)) {
+                    console.log("PUT CARD", el1)
+                    socket.emit('putCardInSlot', {cardName: el1, slotNumber: en[en.length-1], gameId: gameId})
+                } 
+            }
+        }
+    }
+  }, [itemGroups, activeId])
 
   const handleDragStart = ({ active }) => setActiveId(active.id);
 
@@ -104,7 +127,6 @@ function Dnd({isMe, gameId}) {
           over.id in itemGroups
             ? itemGroups[overContainer].length + 1
             : over.data.current.sortable.index;
-
         return moveBetweenContainers(
           itemGroups,
           activeContainer,
@@ -184,8 +206,9 @@ function Dnd({isMe, gameId}) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
+    <div style={{display: 'flex', flexDirection: 'column'}}>
       <ContainersWrapper>
-        {Object.keys(itemGroups).map((group) => (
+        {Object.keys(itemGroups).filter(name => name !== 'hand').map((group) => (
           <Droppable
             id={group}
             items={itemGroups[group]}
@@ -195,7 +218,19 @@ function Dnd({isMe, gameId}) {
           />
         ))}
       </ContainersWrapper>
+      <HandWrapper>
+        {Object.keys(itemGroups).filter(name => name === 'hand').map((group) => (
+            <Droppable
+                id={group}
+                items={itemGroups[group]}
+                activeId={activeId}
+                key={group}
+                isMe={isMe}
+            />
+            ))}
+      </HandWrapper>
       <DragOverlay>{activeId ? <Item id={activeId} dragOverlay /> : null}</DragOverlay>
+      </div>
     </DndContext>
   );
 }
@@ -279,19 +314,24 @@ const Homepage = () => {
 
     useEffect(() => {
         console.log('myTurn', myTurn)
-        if (myTurn) socket.emit('beginRound', {name: state.name, gameId: gameId})
+        if (myTurn) setTimeout(() => socket.emit('beginRound', {name: state.name, gameId: gameId}), 2000)
     }, [myTurn])
 
     useEffect(() => {
+        // socket.on('getCards', (e: any) => {
+        //     console.log(e)
+        // });
         socket.on('beginRound', (e: any) => {
             console.log(e)
         });
         return () => {
             socket.off('beginRound')
+            // socket.off('getCards')
         };
     }, [socket]);
 
     useEffect(() => {
+        // socket.emit('getCards', {name: state.name})
         console.log('gameId', gameId)
     }, [gameId])
 
@@ -349,7 +389,7 @@ const Homepage = () => {
                     <PlayerMana amount={game.player1._mana}/>
                 </Info>
                 <Board1>
-                    <Dnd isMe={false} />
+                    <Dnd isMe={false} gameId={gameId} />
                 </Board1>
             </Player1>
 
@@ -365,10 +405,10 @@ const Homepage = () => {
                         <h3>Cards remaining in deck: {game.player2._deck.length}</h3>
                     </Desc>
                     <PlayerMana amount={game.player2._mana}/>
-                    <Endturn onClick={nextTurn} disabled={myTurn}>End turn</Endturn>
+                    <Endturn onClick={nextTurn} disabled={!myTurn}>End turn</Endturn>
                 </Info>
                 <Board2> 
-                    <Dnd isMe={true} />
+                    <Dnd isMe={true} gameId={gameId} />
                 </Board2>
             </Player2>
         </Wrapper>

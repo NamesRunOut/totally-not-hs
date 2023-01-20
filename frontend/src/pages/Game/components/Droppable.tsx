@@ -11,6 +11,10 @@ const Wrapper = styled.div`
   border: 1px solid white;
   display: flex;
   flex-direction: row;
+  width: 20vw;
+  min-width: 10rem;
+  min-height: 15rem;
+  overflow: hidden;
 `
 
 const Droppable = ({ id, items, isMe }) => {
@@ -19,9 +23,9 @@ const Droppable = ({ id, items, isMe }) => {
 
   let style = {
     pointerEvents: notHand ? 'none' : 'auto',
-    // width: notHand ? 'auto' : "400%",
+    maxWidth: notHand ? '20vw' : '90vw',
     display: !isMe && !notHand ? 'none' : 'flex',
-    width: 'min-content'
+    width: notHand ? "20vw" : "100%"
   }
 
   return (
