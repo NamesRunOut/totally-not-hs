@@ -37,8 +37,8 @@ def connect(sid, environ):
 def join(sid, data):
     res = GameLogic.join(data['name'], data['email'],sid)
     if res['canPlay'] == True:
-        whoStarts = GameLogic.randomStart()
-        sio.emit("start", whoStarts)
+        #whoStarts = GameLogic.randomStart()
+        sio.emit("start", sid)
     sio.emit("join", res, sid)
 
 @sio.event
