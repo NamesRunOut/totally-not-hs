@@ -179,11 +179,23 @@ def endOfRound(sid, playerName, gameId):
         opponentSlot = opponentSlots[opponentSlots['slot'] == i]
         #pobiera info o kartach z bazy
         cardIdP = list(playerSlot['CardId'])[0]
-        playerCard = CardDataMapper.getCardById(cardIdP)
+        playerCardhp = 0
+        opponentCardhp = 0
+        playerCardatk = 0
+        opponentCardatk = 0
+        if(len(cardIdP) > 0):
+            playerCard = CardDataMapper.getCardById(cardIdP)
+            playerCardhp = playerCard.hp
+            playerCardatk = playerCard.atk
+            
         cardIdO = list(opponentSlot['CardId'])[0]
-        opponentCard = CardDataMapper.getCardById(cardIdO)
+        if(len(cardIdO) > 0):
+            opponentCard = CardDataMapper.getCardById(cardIdO)
+            opponentCardhp = opponentCard.hp
+            ooponentCardatk = opponentCard.atk
+
         #karty walczą
-        fightRes = cardsFight(playerCard.atk, playerCard.hp, opponentCard.atk, opponentCard.hp)
+        fightRes = cardsFight(playerCardatk, playerCardhp, opponentCardatk, opponentCardhp)
         #aktualizuje punkty gracza
         #punkty przeciwnika tylko liczy i zwraca, bo przeciwnik sam sobie zaktualizuje we własnym zapytaniu
         if fightRes == 'a':
