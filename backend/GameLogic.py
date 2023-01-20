@@ -123,8 +123,8 @@ def putCardInSlot(sid, cardId, slotNumber, gameId):
     playerIndex = player.index.values.tolist()[0]
     #chceck czy gracz ma taką kartę czy nie oszukuje
     #cardId = CardDataMapper.__getCardIdByName__(cardName) 
-    if(CardDataMapper.__checkIfRowIsInDb(player.at[playerIndex, 'id'], cardId)):
-        return False
+    #if(CardDataMapper.__checkIfRowIsInDb(player.at[playerIndex, 'id'], cardId)):
+    #    return False
     #check czy ma wystarczającą mane
     if(player.at[playerIndex, 'mana'] < 1):
         return False
