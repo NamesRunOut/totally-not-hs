@@ -148,7 +148,7 @@ def getDictOfPlayersSlot(playerId, gameId):
         slot = gameSlots[(gameSlots['slot'] == i) & (gameSlots['PlayerID'] == playerId) & (gameSlots['gameId'] == gameId)]
         slotName = "slot" + str(i)
         cardIds = slot['CardId'].tolist()
-        arr = [CardDataMapper.__getCardNameById__(x) for x in cardIds]
+        #arr = [CardDataMapper.__getCardNameById__(x) for x in cardIds]
         res[slotName] = arr
     return res
 
@@ -184,6 +184,8 @@ def endOfRound(sid, playerName, gameId):
 
 
     playerSlots = gameSlots[(gameSlots['gameId'] == gameId) & (gameSlots['PlayerID'] == playerId)]
+    if len(playerSlots) == len(getAllCards()):
+        playersSlots['cards'] = []
     print("playerslots: ", playerSlots)
     opponentId = list(opponent['id'])
     opponentId = opponentId[0]
