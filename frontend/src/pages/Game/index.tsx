@@ -22,76 +22,192 @@ import {Set} from './components/Set'
 import {InfoNotificationCreator} from "../../patterns/factory-method";
 import {NotificationContextType} from "../../contexts/Notification";
 import {motion, useAnimation} from "framer-motion";
+import { ServerConnectionContext } from '../../contexts/ServerConnection';
+import styled from "styled-components"
+import { usePlayer } from '../../contexts/PlayerContext';
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import Droppable from "./components/Droppable";
+import Item from "./components/Item";
+import { arrayMove, insertAtIndex, removeAtIndex } from "./utils/array";
+import { CardRegistryContext } from '../../patterns/CardRegistry';
 
-function BottomSheet({ isOpen, onClose, onOpen }) {
-    const prevIsOpen = usePrevious(isOpen);
-    const controls = useAnimation();
+const ContainersWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 400%;
+    gap: 0.5rem;
+`
 
-    function onDragEnd(event, info) {
-        const shouldClose =
-            info.velocity.y > 20 || (info.velocity.y >= 0 && info.point.y > 45);
-        if (shouldClose) {
-            // controls.start("hidden");
-            onClose();
-        } else {
-            // controls.start("visible");
-            onOpen();
+function Dnd({isMe, gameId}) {
+    const socket = useContext<any>(ServerConnectionContext)
+    const [, getCard, registry] = useContext(CardRegistryContext)
+    const [prev, setPrev] = useState({ 
+        slot0: [1, 2, 3],
+        slot1: [4, 5, 6],
+        slot2: [7, 8, 9],
+        slot3: [10],
+        hand: [12,13,14,15,16,17]})
+  const [itemGroups, setItemGroups] = useState({
+    slot0: [1, 2, 3],
+    slot1: [4, 5, 6],
+    slot2: [7, 8, 9],
+    slot3: [10],
+    hand: [12,13,14,15,16,17]
+  });
+  const [activeId, setActiveId] = useState(null);
+
+  useEffect(() => {
+    for (let [en, slot] of Object.entries(itemGroups)){
+        if (slot.length > prev[en].length) {
+            console.log(slot)
+            socket.emit('putCardInSlot', {cardName, slotNumber, gameId})
         }
     }
+    setPrev(itemGroups)
+  }, [itemGroups])
 
-    useEffect(() => {
-        if (prevIsOpen && !isOpen) {
-            controls.start("hidden");
-        } else if (!prevIsOpen && isOpen) {
-            controls.start("visible");
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragStart = ({ active }) => setActiveId(active.id);
+
+  const handleDragCancel = () => setActiveId(null);
+
+  const handleDragOver = ({ active, over }) => {
+    const overId = over?.id;
+
+    if (!overId) {
+      return;
+    }
+
+    const activeContainer = active.data.current.sortable.containerId;
+    const overContainer = over.data.current?.sortable.containerId || over.id;
+
+    if (activeContainer !== overContainer) {
+      setItemGroups((itemGroups) => {
+        const activeIndex = active.data.current.sortable.index;
+        const overIndex =
+          over.id in itemGroups
+            ? itemGroups[overContainer].length + 1
+            : over.data.current.sortable.index;
+
+        return moveBetweenContainers(
+          itemGroups,
+          activeContainer,
+          activeIndex,
+          overContainer,
+          overIndex,
+          active.id
+        );
+      });
+    }
+  };
+
+  const handleDragEnd = ({ active, over }) => {
+    if (!over) {
+      setActiveId(null);
+      return;
+    }
+
+    if (active.id !== over.id) {
+      const activeContainer = active.data.current.sortable.containerId;
+      const overContainer = over.data.current?.sortable.containerId || over.id;
+      const activeIndex = active.data.current.sortable.index;
+      const overIndex =
+        over.id in itemGroups
+          ? itemGroups[overContainer].length + 1
+          : over.data.current.sortable.index;
+
+      setItemGroups((itemGroups) => {
+        let newItems;
+        if (activeContainer === overContainer) {
+          newItems = {
+            ...itemGroups,
+            [overContainer]: arrayMove(
+              itemGroups[overContainer],
+              activeIndex,
+              overIndex
+            ),
+          };
+        } else {
+          newItems = moveBetweenContainers(
+            itemGroups,
+            activeContainer,
+            activeIndex,
+            overContainer,
+            overIndex,
+            active.id
+          );
         }
-    }, [controls, isOpen, prevIsOpen]);
 
-    return (
-        <motion.div
-            drag
-            onDragEnd={onDragEnd}
-            initial="hidden"
-            animate={controls}
-            transition={{
-                type: "spring",
-                damping: 40,
-                stiffness: 400
-            }}
-            variants={{
-                visible: { y: 0 },
-                hidden: { y: "100%" }
-            }}
-            dragConstraints={{ top: 0 }}
-            dragElastic={0.2}
-            style={{
-                display: "inline-block",
-                backgroundColor: "white",
-                marginLeft: 20,
-                width: 200,
-                height: 100,
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10
-            }}
-        />
-    );
+        return newItems;
+      });
+    }
+
+    setActiveId(null);
+  };
+
+  const moveBetweenContainers = (
+    items,
+    activeContainer,
+    activeIndex,
+    overContainer,
+    overIndex,
+    item
+  ) => {
+    return {
+      ...items,
+      [activeContainer]: removeAtIndex(items[activeContainer], activeIndex),
+      [overContainer]: insertAtIndex(items[overContainer], overIndex, item),
+    };
+  };
+
+  return (
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragCancel={handleDragCancel}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
+      <ContainersWrapper>
+        {Object.keys(itemGroups).map((group) => (
+          <Droppable
+            id={group}
+            items={itemGroups[group]}
+            activeId={activeId}
+            key={group}
+            isMe={isMe}
+          />
+        ))}
+      </ContainersWrapper>
+      <DragOverlay>{activeId ? <Item id={activeId} dragOverlay /> : null}</DragOverlay>
+    </DndContext>
+  );
 }
 
-function usePrevious(value) {
-    const previousValueRef = useRef();
-
-    useEffect(() => {
-        previousValueRef.current = value;
-    }, [value]);
-
-    return previousValueRef.current;
-}
-
-function Line2() {
-    return <div style={{ backgroundColor: "white", height: 1 }} />;
-}
 
 const Homepage = () => {
+    const socket = useContext<any>(ServerConnectionContext)
+    const {state} = usePlayer()
+    const [myTurn, setMyTurn] = useState(false)
+    const [gameId, setGameId] = useState(-1)
+    const [canPlay, setCanPlay] = useState(false)
+
     const [game, setGame] = useState<any>({
         myid: 0,
         player: 0,
@@ -108,14 +224,14 @@ const Homepage = () => {
     })
     const [selected, setSelected] = useState<any>(null)
     const [setNotification] = useContext<NotificationContextType>(NotificationContext)
-    const [showReward, setShowReward] = useState(true)
+    const [showReward, setShowReward] = useState(false)
     const constraintsRef = useRef(null)
     const handconstraintsRef = useRef(null)
 
     const [isOpen, setIsOpen] = useState(false);
 
     const nextTurn = () => {
-        // socket.emit('nextTurn')
+        socket.emit("endOfRound", {name: state.name, gameId: gameId})
     }
 
     const placeCard = (isme: boolean, boardid: number) => {
@@ -132,6 +248,27 @@ const Homepage = () => {
     //     };
     // }, [socket]);
 
+    useEffect(() => {
+        socket.on('start', (e: any) => {
+            console.log('start', e, e === socket.id)
+            setCanPlay(true)
+            if (e === socket.id) setMyTurn(true)
+            else setMyTurn(false)
+        });
+        return () => {
+            socket.off('start')
+        };
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on('join', (e: any) => {
+            setGameId(e.gameID)
+        });
+        return () => {
+            socket.off('join')
+        };
+    }, [socket]);
+
     function onClose() {
         setIsOpen(false);
     }
@@ -140,12 +277,29 @@ const Homepage = () => {
         setIsOpen(true);
     }
 
+    useEffect(() => {
+        console.log('myTurn', myTurn)
+        if (myTurn) socket.emit('beginRound', {name: state.name, gameId: gameId})
+    }, [myTurn])
+
+    useEffect(() => {
+        socket.on('beginRound', (e: any) => {
+            console.log(e)
+        });
+        return () => {
+            socket.off('beginRound')
+        };
+    }, [socket]);
+
+    useEffect(() => {
+        console.log('gameId', gameId)
+    }, [gameId])
 
     useEffect(() => {
         if (game?.victor) setNotification(new InfoNotificationCreator(game?.victormessage).getNotification())
     }, [game?.victor, game?.victormessage, setNotification]);
 
-    if (game === undefined) return (<WaitMessage>Please wait for the game to start</WaitMessage>)
+    if (!canPlay) return (<WaitMessage>Please wait for the game to start</WaitMessage>)
 
     return (
         <Wrapper ref={constraintsRef}>
@@ -180,13 +334,12 @@ const Homepage = () => {
             </RewardBG>}
 
             <Config>
-                <p>Turn: {game.turncount}</p>
-                <p style={{color: game.player === game.myid ? 'green' : 'red'}}>Player: {game.player === game.myid ? 'You' : 'Opponent'}</p>
+                <p style={{color: myTurn ? 'green' : 'red'}}>Player: {myTurn ? 'You' : 'Opponent'}</p>
             </Config>
 
             <Player1>
                 <Info>
-                    <h1>{game.player1._username}</h1>
+                    <h3>{game.player1._username}</h3>
                     <Avatar src={`https://avatars.dicebear.com/api/bottts/:${game.player1._username}.svg`}/>
                     <Desc>
                         <h3>Score: {game.player1._score}</h3>
@@ -194,17 +347,9 @@ const Homepage = () => {
                         <h3>Cards remaining in deck: {game.player1._deck.length}</h3>
                     </Desc>
                     <PlayerMana amount={game.player1._mana}/>
-                    {game.myid === game.player1._id ?
-                        <Endturn onClick={nextTurn} disabled={game.player !== game.myid}>End turn</Endturn> : <></>}
                 </Info>
                 <Board1>
-                    <Playarea>
-                        <CardSlot click={() => placeCard(game.myid === game.player1._id, 0)} card={game.board[0][0]}/>
-                        <CardSlot click={() => placeCard(game.myid === game.player1._id, 1)} card={game.board[0][1]}/>
-                        <CardSlot click={() => placeCard(game.myid === game.player1._id, 2)} card={game.board[0][2]}/>
-                        <CardSlot click={() => placeCard(game.myid === game.player1._id, 3)} card={game.board[0][3]}/>
-                    </Playarea>
-                    <Set player={game.player1} isme={game.myid === game.player1._id} selected={selected} setSelected={setSelected}/>
+                    <Dnd isMe={false} />
                 </Board1>
             </Player1>
 
@@ -212,37 +357,18 @@ const Homepage = () => {
 
             <Player2>
                 <Info>
-                    <h1>{game.player2._username}</h1>
-                    <Avatar src={`https://avatars.dicebear.com/api/bottts/:${game.player2._username}.svg`}/>
+                    <h3>{state.name}</h3>
+                    <Avatar src={`https://avatars.dicebear.com/api/bottts/:${state.name}.svg`}/>
                     <Desc>
                         <h3>Score: {game.player2._score}</h3>
                         <h3>Cards in hand: {game.player2._hand.length}</h3>
                         <h3>Cards remaining in deck: {game.player2._deck.length}</h3>
                     </Desc>
                     <PlayerMana amount={game.player2._mana}/>
-                    {game.myid === game.player2._id ?
-                        <Endturn onClick={nextTurn} disabled={game.player !== game.myid}>End turn</Endturn> : <></>}
+                    <Endturn onClick={nextTurn} disabled={myTurn}>End turn</Endturn>
                 </Info>
-                <Board2>
-                    <Playarea>
-                        <CardSlot click={() => placeCard(game.myid === game.player2._id, 0)} card={game.board[1][0]}/>
-                        <CardSlot click={() => placeCard(game.myid === game.player2._id, 1)} card={game.board[1][1]}/>
-                        <CardSlot click={() => placeCard(game.myid === game.player2._id, 2)} card={game.board[1][2]}/>
-                        <CardSlot click={() => placeCard(game.myid === game.player2._id, 3)} card={game.board[1][3]}/>
-                    </Playarea>
-                    <Set player={game.player2} isme={game.myid === game.player2._id} selected={selected} setSelected={setSelected}/>
-
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            marginTop: 100
-                        }}
-                    >
-                        <BottomSheet onOpen={onOpen} isOpen={isOpen} onClose={onClose} />
-                        <Line2 />
-                    </div>
-
+                <Board2> 
+                    <Dnd isMe={true} />
                 </Board2>
             </Player2>
         </Wrapper>

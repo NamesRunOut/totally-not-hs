@@ -22,7 +22,7 @@ export const Wrapper = styled.div`
 
 export const Player = styled.div`
   display: grid;
-  grid-template-columns: 20% 1fr;
+  grid-template-columns: 10% 1fr;
 `
 
 export const Player1 = styled(Player)`
@@ -81,15 +81,11 @@ export const Desc = styled.div`
 
 export const Board = styled.div`
   display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  width: 100%;
 `
 
 export const Board1 = styled(Board)`
-  flex-direction: column-reverse;
+
 `
 
 export const Board2 = styled(Board)`
@@ -160,7 +156,7 @@ export const Endturn = styled.button`
 
 export const Config = styled.div`
   position: absolute;
-  top: 0.5rem;
+  top: 2.5rem;
   right: 0.5rem;
   display: flex;
   flex-direction: column;

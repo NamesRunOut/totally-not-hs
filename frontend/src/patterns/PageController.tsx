@@ -17,14 +17,16 @@ import bg from "../assets/bg.png";
 import {PageWrapper} from "../pages/Homepage/styles";
 import {CardRegistry} from "./CardRegistry";
 import Deck from "../pages/Deck";
+import { ServerConnection } from '../contexts/ServerConnection';
 
 function PageController() {
   return (
       <Theme>
-          <Notification>
-              <CardRegistry>
-                  <PlayersProvider>
-                      <PlayerProvider>
+        <ServerConnection>
+            <Notification>
+            <PlayerProvider>
+                <CardRegistry>
+                  <PlayersProvider>                  
                           <Router>
                               <GlobalStyle/>
                               <Popup/>
@@ -39,11 +41,12 @@ function PageController() {
                                       <Route element={<MissingPage/>}/>
                                   </Routes>
                               </PageWrapper>
-                          </Router>
-                      </PlayerProvider>
+                          </Router>                
                   </PlayersProvider>
-              </CardRegistry>
+                </CardRegistry>
+              </PlayerProvider>
           </Notification>
+        </ServerConnection>
       </Theme>
   );
 }

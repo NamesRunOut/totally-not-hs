@@ -77,6 +77,12 @@ const playerReducer = (state: State, action: Action) => {
                 deck: new Set(Array.from(state.ownedCards))
             }
         }
+        case 'setName': {
+            return {
+                ...state,
+                name: action.name
+            }
+        }
         default: {
             throw new Error(`Unhandled action type: ${action.type}`)
         }
@@ -85,10 +91,11 @@ const playerReducer = (state: State, action: Action) => {
 
 function PlayerProvider({children}: PlayerProviderProps) {
     let initArgs = {
+        name: "player",
         count: 0,
         wallet: {basic: BasicCurrency(), rare: RareCurrency()},
         ownedCards: new Set([1,2,3,4,5,6,7,8,9,10,11,12,13,15,17,21]),
-        deck: new Set([])
+        deck: new Set([1,2,3,4,5,6,7,8,9,10,11,12,13,15,17,21])
     }
     const [state, dispatch] = useReducer(playerReducer, initArgs)
     const value = {state, dispatch}

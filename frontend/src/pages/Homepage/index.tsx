@@ -25,46 +25,32 @@ import {cardList} from "../../utils/card_list";
 import {usePlayer} from "../../contexts/PlayerContext";
 import PrimaryButton from "../../components/NavButton";
 import {motion, Variants} from "framer-motion";
+import { ServerConnectionContext } from '../../contexts/ServerConnection';
 
 const characterName: string = uniqueNamesGenerator({
     dictionaries: [adjectives, animals],
     seed: rand(0, 100)
 });
 
-// const cardName: string = uniqueNamesGenerator({
-//     dictionaries: [colors, adjectives, animals],
-//     separator: ' ',
-//     seed: rand(0, 100)
-// });
-
 const Homepage = () => {
     const [username, setUsername] = useState<string>(characterName)
-    const [pclass, setPClass] = useState("Class1")
+    // const [pclass, setPClass] = useState("Class1")
     const [setNotification] = useContext<NotificationContextType>(NotificationContext)
-    const {state} = usePlayer()
+    const {state, dispatch} = usePlayer()
+    const socket = useContext<any>(ServerConnectionContext)
     let navigate = useNavigate()
-
-    // useEffect(() => {
-    //     socket.emit('getClasses')
-    //     socket.on('enterLobby', () => navigate('./game'));
-    //     socket.on('classesList', (classes: any) => setTabs(classes));
-    //
-    //     return () => {
-    //         socket.off('classesList')
-    //     };
-    // }, [socket]);
 
     const play = () => {
         let deck: any = []
-        Array.from(state.deck).forEach((card: any) => {
-            if (card.selected) deck.push(card.id)
-        })
+        let deckLength = state.deck.size
 
-        if (deck.length <= 0) {
+        if (deckLength < 1) {
             setNotification(new AlertNotificationCreator('Deck size must be greater than 0').getNotification())
             return
         }
-        // socket.emit('play', deck, selectedTab.id, username)
+        dispatch({type: 'setName', name: username})
+        navigate('./game')
+        socket.emit('join', {name: username, email: `${username}@totallynoths.com`})
     }
 
     return (<Wrapper>
@@ -73,7 +59,7 @@ const Homepage = () => {
             <Avatar src={`https://avatars.dicebear.com/api/bottts/:${username}.svg`}/>
             <PlayerInfo>
                 <Param>Name</Param><Input value={username} onChange={(e: any) => setUsername(e.target.value)}/>
-                <Param>Class</Param><ClassSelector value={pclass} onChange={e => setPClass(e.target.value)}><option value="Class1">Class 1 </option><option value="Class2">Class 2 </option><option value="Class3">Class 3 </option></ClassSelector>
+                {/* <Param>Class</Param><ClassSelector value={pclass} onChange={e => setPClass(e.target.value)}><option value="Class1">Class 1 </option><option value="Class2">Class 2 </option><option value="Class3">Class 3 </option></ClassSelector> */}
                 <Param>Owned</Param><Param>{Array.from(state.ownedCards).length} cards</Param>
                 <Param>Deck</Param><Param>{Array.from(state.deck).length} cards</Param>
             </PlayerInfo>
