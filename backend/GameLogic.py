@@ -149,7 +149,7 @@ def getDictOfPlayersSlot(playerId, gameId):
         slotName = "slot" + str(i)
         cardIds = slot['CardId'].tolist()
         #arr = [CardDataMapper.__getCardNameById__(x) for x in cardIds]
-        res[slotName] = arr
+        res[slotName] = cardIds
     return res
 
 import random
