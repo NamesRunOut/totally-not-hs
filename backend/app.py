@@ -73,6 +73,7 @@ def beginRound(sid,data):
 @sio.event
 def endOfRound(sid, data):
     res = GameLogic.endOfRound(sid,data['name'],data['gameId'])
+    print(res)
     sio.emit("endOfRoundYourCards", res[1], sid)
     sio.emit("endOfRoundOpponentCards", res[1], res[2])
     sio.emit("endOfRound", res[0])
