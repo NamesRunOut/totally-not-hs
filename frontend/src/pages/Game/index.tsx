@@ -377,6 +377,7 @@ const Homepage = () => {
             slot4: e.slot4,
             hand: e.cards || []})
           setMyTurn(false)
+          setTimeout(() => setShowReward(true), 60000)
       });
       socket.on('endOfRoundOpponentCards', (e: any) => {
         console.log('endOfRoundOpponentCards', e)
@@ -387,6 +388,7 @@ const Homepage = () => {
             slot4: e.slot4,
             hand: []})
           setMyTurn(true)
+          setTimeout(() => setShowPunishment(true), 60000)
       });
 
       return () => {
@@ -443,7 +445,7 @@ const Homepage = () => {
                     }}
                 />
             </RewardBG>}
-            {showPunishment && <RewardBG onClick={() => setShowReward(false)} initial={{ scale: 0 }} animate={{ rotate: 180, scale: 1 }}>
+            {showPunishment && <RewardBG onClick={() => setShowPunishment(false)} initial={{ scale: 0 }} animate={{ rotate: 180, scale: 1 }}>
                 <RewardPic
                   src={`https://cataas.com/cat/cute/says/what%20a%20loser`}
                   drag
